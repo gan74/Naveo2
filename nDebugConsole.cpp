@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 nDebugConsole::nDebugConsole(QWidget *parent) : QWidget(parent) {
 	setWindowTitle("Naveo debug console");
-	setWindowIcon(QIcon(":/icon.png"));
 	QVBoxLayout *layout = new QVBoxLayout(this);
 
 	textEdit = new QPlainTextEdit(this);

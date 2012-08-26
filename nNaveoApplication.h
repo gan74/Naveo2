@@ -33,11 +33,14 @@ class nNaveoApplication : public QApplication
 		nSearchEngine *getSearchEngine();
 		QWebSettings *getWebSettings();
 		QLibrary *getLibrary(QString name);
-		QString getPath();
+		QNetworkAccessManager *getNetworkAccessManager();
 
+		QString getPath();
 		static nNaveoApplication *app();
 
 		void debug(QString msg);
+		void error(QString err);
+
 		int exec();
 
 	private:
@@ -47,6 +50,7 @@ class nNaveoApplication : public QApplication
 		nSearchEngine *engine;
 		nDebugConsole *console;
 		QWebSettings *webSettings;
+		QNetworkAccessManager *accessManager;
 		QMap<QString, QLibrary *> libs;
 };
 

@@ -14,31 +14,39 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **********************************/
 
-#ifndef NWEBVIEW_H
-#define NWEBVIEW_H
+#ifndef NDOWNLOAD_H
+#define NDOWNLOAD_H
 
-#include <QtWebKit>
+#include <QtNetwork>
 
-class nWebView : public QWebView
+class nDownload : public QObject
 {
-    Q_OBJECT
+	Q_OBJECT
 
 	public:
-		explicit nWebView(QWidget *parent = 0);
+		nDownload(QNetworkReply *rep, QObject *parent = 0);
+		nDownload(QUrl url, QObject *parent = 0);
+		~nDownload();
 
-		int getProgress();
-
-	signals:
+		void setTargetFile(QString path);
 
 	public slots:
+		bool start();
+		void cancel();
+
+	signals:
+		void progress(qint64, qint64);
 
 	private slots:
-		void updateProgress(int pro);
-		void unsupportedContent(QNetworkReply *reply);
+		void write();
+		void error(QNetworkReply::NetworkError err);
+		void finished();
 
 	private:
-		int progress;
+		QNetworkReply *reply;
+		bool failed;
+		QFile file;
 
 };
 
-#endif // NWEBVIEW_H
+#endif // NDOWNLOAD_H

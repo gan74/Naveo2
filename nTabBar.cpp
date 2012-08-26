@@ -25,8 +25,8 @@ nTabBar::nTabBar(QWidget *parent) : QTabBar(parent) {
 	QTabBar::addTab("+");
 	tabButton(0, QTabBar::RightSide)->deleteLater();
 	setTabButton(0, QTabBar::RightSide, 0);
-
-	setStyleSheet("QTabBar::tab:last { width: 31px; }");
+	setElideMode(Qt::ElideRight);
+	setStyleSheet("QTabBar::tab { width: 220px; } QTabBar::tab:last { width: 31px; }");
 }
 
 int nTabBar::count() const {

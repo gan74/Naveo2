@@ -16,11 +16,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <nWebView.h>
 #include <nNaveoApplication.h>
+#include <nDownload.h>
 
 nWebView::nWebView(QWidget *parent) : QWebView(parent) {
 	progress = 0;
-	load(QUrl("http://www.google.com"));
+	load(QUrl("http://qt.nokia.com/downloads"));
 	connect(this, SIGNAL(loadProgress(int)), this, SLOT(updateProgress(int)));
+	page()->setForwardUnsupportedContent(true);
+	connect(page(), SIGNAL(unsupportedContent(QNetworkReply*)), this, SLOT(unsupportedContent(QNetworkReply*)));
 }
 
 int nWebView::getProgress() {
@@ -29,4 +32,26 @@ int nWebView::getProgress() {
 
 void nWebView::updateProgress(int pro) {
 	progress = pro;
+}
+
+void nWebView::unsupportedContent(QNetworkReply *reply) {
+	if(reply->error() == QNetworkReply::NoError) {
+		int size = reply->header(QNetworkRequest::ContentLengthHeader).toInt();
+		QString type = reply->header(QNetworkRequest::ContentTypeHeader).toString();
+		if(size) {
+			QUrl url = reply->url();
+			nApp()->debug(QString("Downloading " + url.toString() + " (%1 bytes : MIME " + type + ")").arg(size));
+			nDownload *dl = new nDownload(reply);
+			dl->setTargetFile(nApp()->getPath() + url.toString().split("/").last());
+			if(!dl->start()) {
+				nApp()->error(QString("unable to start download"));
+			}
+		} else {
+			nApp()->error(QString("network reply with size = 0"));
+			delete reply;
+		}
+	} else {
+		nApp()->debug(QString("network code = %1").arg((int)reply->error()));
+		delete reply;
+	}
 }

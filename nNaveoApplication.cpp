@@ -20,7 +20,9 @@ nNaveoApplication::nNaveoApplication(int argc, char *argv[]) : QApplication(argc
 	theme = new nTheme();
 	console = new nDebugConsole();
 	engine = new nGoogleSearchEngine();
+	accessManager = new QNetworkAccessManager(this);
 	initWebSettings();
+	setWindowIcon(QIcon(":/icon.png"));
 }
 
 nNaveoApplication *nNaveoApplication::app() {
@@ -29,6 +31,10 @@ nNaveoApplication *nNaveoApplication::app() {
 
 void nNaveoApplication::debug(QString msg) {
 	console->message(msg);
+}
+
+void nNaveoApplication::error(QString err) {
+	debug("Error : " + err);
 }
 
 int nNaveoApplication::exec() {
@@ -41,9 +47,9 @@ int nNaveoApplication::exec() {
 
 QString nNaveoApplication::getPath() {
 	#ifdef Q_WS_WIN
-		return applicationDirPath();
+		return applicationDirPath() + "/";
 	#else
-		return applicationFilePath();
+		return applicationFilePath() + "/";
 	#endif
 }
 
@@ -87,4 +93,8 @@ nSearchEngine *nNaveoApplication::getSearchEngine() {
 
 QWebSettings *nNaveoApplication::getWebSettings() {
 	return webSettings;
+}
+
+QNetworkAccessManager *nNaveoApplication::getNetworkAccessManager() {
+	return accessManager;
 }

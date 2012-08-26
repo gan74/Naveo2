@@ -53,7 +53,6 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 	current = 0;
 
 	setWindowTitle("Naveo");
-	setWindowIcon(QIcon(":/icon.png"));
 	setMinimumSize(300, 200);
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
@@ -90,6 +89,8 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 	layout->addWidget(stack);
 
 	addTab();
+
+	nApp()->debug("Window created");
 }
 
 nWindow::~nWindow() {
