@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <nNaveoApplication.h>
 
 nNaveoApplication::nNaveoApplication(int argc, char *argv[]) : QApplication(argc, argv) {
-	initWebSettings();
 	theme = new nTheme();
-	engine = new nGoogleSearchEngine();
 	console = new nDebugConsole();
+	engine = new nGoogleSearchEngine();
+	initWebSettings();
 }
 
 nNaveoApplication *nNaveoApplication::app() {
@@ -39,13 +39,21 @@ int nNaveoApplication::exec() {
 	return QApplication::exec();
 }
 
+QString nNaveoApplication::getPath() {
+	#ifdef Q_WS_WIN
+		return applicationDirPath();
+	#else
+		return applicationFilePath();
+	#endif
+}
+
 void nNaveoApplication::initWebSettings() {
 	QNetworkProxyFactory::setUseSystemConfiguration(true);
 	webSettings = QWebSettings::globalSettings();
 
 	webSettings->setMaximumPagesInCache(40);
-	webSettings->setIconDatabasePath(applicationDirPath() + "/cache/");
-	webSettings->setOfflineStoragePath(applicationDirPath() + "/cache/");
+	webSettings->setIconDatabasePath(getPath() + "/cache/");
+	webSettings->setOfflineStoragePath(getPath() + "/cache/");
 	webSettings->setAttribute(QWebSettings::OfflineStorageDatabaseEnabled, true);
 	webSettings->setAttribute(QWebSettings::OfflineWebApplicationCacheEnabled, true);
 	webSettings->setAttribute(QWebSettings::LocalStorageDatabaseEnabled, true);
@@ -56,8 +64,8 @@ void nNaveoApplication::initWebSettings() {
 	webSettings->setAttribute(QWebSettings::JavascriptCanOpenWindows , true);
 	webSettings->setAttribute(QWebSettings::JavaEnabled, true);
 	webSettings->setAttribute(QWebSettings::PrivateBrowsingEnabled , false);
-	QWebSettings::setWebGraphic(QWebSettings::MissingPluginGraphic, QPixmap(":/plug.png"));
-	QWebSettings::setWebGraphic(QWebSettings::DefaultFrameIconGraphic, QPixmap(":/proxy.png"));
+	QWebSettings::setWebGraphic(QWebSettings::MissingPluginGraphic, theme->getPixmap(nTheme::Plugin));
+	QWebSettings::setWebGraphic(QWebSettings::DefaultFrameIconGraphic, theme->getPixmap(nTheme::DefaultPage));
 }
 
 QLibrary *nNaveoApplication::getLibrary(QString name) {

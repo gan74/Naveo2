@@ -45,7 +45,7 @@ QUrl nUrlLineEdit::getUrl() {
 void nUrlLineEdit::setIcon(QIcon icon) {
 	pageIcon = icon;
 	if(icon.isNull()) {
-		pageIcon = QIcon(":/proxy.png");
+		pageIcon = nApp()->getTheme()->getIcon(nTheme::DefaultPage);
 	}
 }
 

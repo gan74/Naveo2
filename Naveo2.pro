@@ -8,6 +8,7 @@ QT       += core gui webkit network
 
 TARGET = Naveo2
 TEMPLATE = app
+CONFIG += console
 
 INCLUDEPATH += .
 
@@ -31,3 +32,6 @@ HEADERS  += nWindow.h \
     nUrlLineEdit.h \
     nSearchEngine.h \
     nDebugConsole.h
+
+FORMS += \
+    form.ui

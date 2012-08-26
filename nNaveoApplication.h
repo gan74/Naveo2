@@ -33,7 +33,7 @@ class nNaveoApplication : public QApplication
 		nSearchEngine *getSearchEngine();
 		QWebSettings *getWebSettings();
 		QLibrary *getLibrary(QString name);
-
+		QString getPath();
 
 		static nNaveoApplication *app();
 

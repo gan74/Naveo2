@@ -26,9 +26,21 @@ class nTabBar : public QTabBar
 	public:
 		explicit nTabBar(QWidget *parent = 0);
 
-	signals:
+		int count() const;
 
-	public slots:
+		int insertTab(int index, const QIcon &icon, const QString &text);
+		int insertTab(int index, const QString &text);
+		int addTab(const QString &text);
+		int addTab(const QIcon &icon, const QString &text);
+
+	signals:
+		void newTabRequested();
+
+	protected:
+		void tabRemoved(int index);
+		void mousePressEvent(QMouseEvent *event);
+
+
 
 };
 

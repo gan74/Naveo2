@@ -15,6 +15,52 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **********************************/
 
 #include <nTabBar.h>
+#include <nNaveoApplication.h>
 
 nTabBar::nTabBar(QWidget *parent) : QTabBar(parent) {
+	setMovable(true);
+	setTabsClosable(true);
+	setUsesScrollButtons(false);
+	setExpanding(false);
+	QTabBar::addTab("+");
+	tabButton(0, QTabBar::RightSide)->deleteLater();
+	setTabButton(0, QTabBar::RightSide, 0);
+
+	setStyleSheet("QTabBar::tab:last { width: 31px; }");
 }
+
+int nTabBar::count() const {
+	return QTabBar::count() - 1;
+}
+
+void nTabBar::mousePressEvent(QMouseEvent *event) {
+	if(event->button() == Qt::LeftButton && tabAt(event->pos()) == count()) {
+		emit newTabRequested();
+		return;
+	}
+	QTabBar::mousePressEvent(event);
+}
+
+int nTabBar::insertTab(int index, const QIcon &icon, const QString &text) {
+	return QTabBar::insertTab(index < 0 ? count() : index, icon, text);
+}
+
+int nTabBar::insertTab(int index, const QString &text) {
+	return insertTab(index, QIcon(), text);
+}
+
+int nTabBar::addTab(const QIcon &icon, const QString &text) {
+	return insertTab(-1, icon, text);
+}
+
+int nTabBar::addTab(const QString &text) {
+	return addTab(QIcon(), text);
+}
+
+void nTabBar::tabRemoved(int index) {
+	QTabBar::tabRemoved(index);
+	if(currentIndex() == count()) {
+		setCurrentIndex(index - 1);
+	}
+}
+

@@ -18,36 +18,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <nNaveoApplication.h>
 
 #ifdef Q_WS_WIN
-#include <windows.h>
-typedef struct {
-	int cxLeftWidth;
-	int cxRightWidth;
-	int cyTopHeight;
-	int cyBottomHeight;
-} MARGINS;
-typedef HRESULT (WINAPI *PtrDwmExtendFrameIntoClientArea)(HWND hWnd, const MARGINS *margins);
-static PtrDwmExtendFrameIntoClientArea pDwmExtendFrameIntoClientArea = 0;
-typedef HRESULT (WINAPI *PtrDwmIsCompositionEnabled)(BOOL *pfEnabled);
-static PtrDwmIsCompositionEnabled pDwmIsCompositionEnabled = 0;
+	#include <windows.h>
+	typedef struct {
+		int cxLeftWidth;
+		int cxRightWidth;
+		int cyTopHeight;
+		int cyBottomHeight;
+	} MARGINS;
+	typedef HRESULT (WINAPI *PtrDwmExtendFrameIntoClientArea)(HWND hWnd, const MARGINS *margins);
+	static PtrDwmExtendFrameIntoClientArea pDwmExtendFrameIntoClientArea = 0;
+	typedef HRESULT (WINAPI *PtrDwmIsCompositionEnabled)(BOOL *pfEnabled);
+	static PtrDwmIsCompositionEnabled pDwmIsCompositionEnabled = 0;
 #endif
 
 nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 	if(!parent) {
 		#ifdef Q_WS_WIN
-		if (QSysInfo::WindowsVersion >= QSysInfo::WV_VISTA)	{
-			QLibrary *winapi = nApp()->getLibrary("dwmapi");
-			pDwmIsCompositionEnabled = (PtrDwmIsCompositionEnabled)winapi->resolve("DwmIsCompositionEnabled");
-			BOOL enabled = FALSE;
-			pDwmIsCompositionEnabled(&enabled);
-			if(enabled) {
-				pDwmExtendFrameIntoClientArea = (PtrDwmExtendFrameIntoClientArea)winapi->resolve("DwmExtendFrameIntoClientArea");
-				MARGINS margins = {-1};
-				pDwmExtendFrameIntoClientArea(winId(), &margins);
-				setAutoFillBackground(false);
-				setAttribute(Qt::WA_TranslucentBackground);
-			}
+			if (QSysInfo::WindowsVersion >= QSysInfo::WV_VISTA)	{
+				QLibrary *winapi = nApp()->getLibrary("dwmapi");
+				pDwmIsCompositionEnabled = (PtrDwmIsCompositionEnabled)winapi->resolve("DwmIsCompositionEnabled");
+				BOOL enabled = FALSE;
+				pDwmIsCompositionEnabled(&enabled);
+				if(enabled) {
+					pDwmExtendFrameIntoClientArea = (PtrDwmExtendFrameIntoClientArea)winapi->resolve("DwmExtendFrameIntoClientArea");
+					MARGINS margins = {-1};
+					pDwmExtendFrameIntoClientArea(winId(), &margins);
+					setAutoFillBackground(false);
+					setAttribute(Qt::WA_TranslucentBackground);
+				}
 
-		}
+			}
 		#endif
 	}
 	current = 0;
@@ -61,11 +61,10 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 	layout->setSpacing(0);
 
 	tabBar = new nTabBar(this);
-	tabBar->setMovable(true);
-	tabBar->setTabsClosable(true);
 	connect(tabBar, SIGNAL(tabMoved(int,int)), this, SLOT(tabMoved(int, int)));
 	connect(tabBar, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
 	connect(tabBar, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
+	connect(tabBar, SIGNAL(newTabRequested()), this, SLOT(addTab()));
 	layout->addWidget(tabBar);
 
 	toolBar = new QToolBar(this);
@@ -90,10 +89,6 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 	stack->setAutoFillBackground(true);
 	layout->addWidget(stack);
 
-
-	addTab();
-	addTab();
-	addTab();
 	addTab();
 }
 
@@ -107,11 +102,11 @@ void nWindow::addTab() {
 
 	stack->addWidget(view);
 	tabIndexes.append(tabBar->count());
-	tabBar->addTab(tr("New tab"));
+	int index = tabBar->addTab(tr("New tab"));
+	tabBar->setCurrentIndex(index);
 	if(tabBar->count() == 1) {
 		connectTab(view);
 	}
-	view->load(QUrl("http://www.google.com"));
 }
 
 void nWindow::closeTab(int index) {

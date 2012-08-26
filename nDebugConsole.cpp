@@ -37,4 +37,5 @@ nDebugConsole::nDebugConsole(QWidget *parent) : QWidget(parent) {
 
 void nDebugConsole::message(QString msg) {
 	textEdit->setPlainText(textEdit->toPlainText() + msg + "\n");
+	qDebug(msg.toAscii());
 }

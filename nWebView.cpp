@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 nWebView::nWebView(QWidget *parent) : QWebView(parent) {
 	progress = 0;
-
+	load(QUrl("http://www.google.com"));
 	connect(this, SIGNAL(loadProgress(int)), this, SLOT(updateProgress(int)));
 }
 
