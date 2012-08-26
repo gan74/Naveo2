@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icon.png</file>
+        <file>closetab.png</file>
+        <file>closetab_.png</file>
+        <file>loading.gif</file>
+        <file>proxy.png</file>
+        <file>theme/back.png</file>
+        <file>theme/forward.png</file>
+        <file>theme/reload.png</file>
+        <file>theme/stop.png</file>
+        <file>plug.png</file>
+    </qresource>
+</RCC>
