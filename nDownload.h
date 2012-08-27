@@ -34,6 +34,9 @@ class nDownload : public QObject
 
 		void setAutoDelete(bool enable);
 
+		bool isSuccessful();
+		bool isRunning();
+
 	public slots:
 		bool start();
 		void cancel();
@@ -51,6 +54,7 @@ class nDownload : public QObject
 		QNetworkReply *reply;
 		QFile file;
 		bool failed;
+		bool running;
 };
 
 #endif // NDOWNLOAD_H

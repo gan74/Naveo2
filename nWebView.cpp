@@ -35,14 +35,14 @@ void nWebView::updateProgress(int pro) {
 }
 
 void nWebView::unsupportedContent(QNetworkReply *reply) {
-	if(reply->error() == QNetworkReply::NoError) {
+	if(reply->error() == QNetworkReply::NoError && reply->header(QNetworkRequest::ContentLengthHeader).isValid()) {
 		int size = reply->header(QNetworkRequest::ContentLengthHeader).toInt();
 		QString type = reply->header(QNetworkRequest::ContentTypeHeader).toString();
 		if(size) {
 			QUrl url = reply->url();
 			nApp()->debug(QString("Downloading " + url.toString() + " (%1 bytes : MIME " + type + ")").arg(size));
 			nDownload *dl = new nDownload(reply);
-			dl->setTargetFile(nApp()->getPath() + url.toString().split("/").last());
+			dl->setTargetFile(nApp()->getPath() + url.toString(QUrl::RemoveQuery).split("/").last());
 			if(!dl->start()) {
 				nApp()->error(QString("unable to start download"));
 				dl->deleteLater();

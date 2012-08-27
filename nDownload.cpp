@@ -19,15 +19,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 nDownload::nDownload(QNetworkReply *rep, QObject *parent) : QObject(parent) {
 	file.setFileName(nApp()->getPath() + "/unnamed");
+	setStream(rep);
 	failed = false;
-	setStream(reply);
+	running = false;
 }
 
 nDownload::nDownload(QUrl url, QObject *parent) : QObject(parent) {
 	file.setFileName(nApp()->getPath() + "/unnamed");
-	failed = false;
 	setStreamUrl(url);
-
+	failed = false;
+	running = false;
 }
 
 nDownload::~nDownload() {
@@ -46,6 +47,13 @@ void nDownload::setStream(QNetworkReply *rep) {
 void nDownload::setStreamUrl(QUrl url) {
 	cancel();
 	reply = nApp()->getNetworkAccessManager()->get(QNetworkRequest(url));
+}
+
+bool nDownload::isSuccessful() {
+	return !failed;
+}
+bool nDownload::isRunning() {
+	return running;
 }
 
 void nDownload::setAutoDelete(bool enable) {
@@ -73,6 +81,8 @@ bool nDownload::start() {
 	connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
 	connect(reply, SIGNAL(downloadProgress(qint64, qint64)), this, SIGNAL(progress(qint64, qint64)));
 	connect(reply, SIGNAL(finished()), this, SLOT(finished()));
+
+	running = true;
 	return true;
 }
 
@@ -81,12 +91,10 @@ void nDownload::write() {
 		nApp()->error(QString("stream closed"));
 		cancel();
 	} else {
-		int bytes = file.write(reply->readAll());
-		if(bytes < 0) {
+		if(file.write(reply->readAll()) < 0) {
 			nApp()->error(QString("unable to read data from stream"));
 			cancel();
 		}			
-		nApp()->debug(QString("%1 bytes written").arg(bytes));
 	}
 }
 
@@ -97,10 +105,13 @@ void nDownload::error(QNetworkReply::NetworkError err) {
 }
 
 void nDownload::finished() {
+	running = false;
 	file.close();
-	reply->close();
-	reply->deleteLater();
-	reply = 0;
+	if(reply) {
+		reply->close();
+		reply->deleteLater();
+		reply = 0;
+	}
 	nApp()->debug("Download of \"" + file.fileName() + "\" " + (failed ? "failed" : "finished"));
 	emit downloadFinished(!failed);
 }

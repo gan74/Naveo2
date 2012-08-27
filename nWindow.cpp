@@ -52,7 +52,7 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 	}
 	current = 0;
 
-	setWindowTitle("Naveo");
+	setWindowTitle("Naveo2");
 	setMinimumSize(300, 200);
 
 	QVBoxLayout *layout = new QVBoxLayout(this);

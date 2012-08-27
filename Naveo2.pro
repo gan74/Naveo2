@@ -37,6 +37,3 @@ HEADERS  += nWindow.h \
     nSearchEngine.h \
     nDebugConsole.h \
     nDownload.h
-
-FORMS += \
-    form.ui
