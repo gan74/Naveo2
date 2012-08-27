@@ -30,7 +30,9 @@ class nDownload : public QObject
 
 		void setTargetFile(QString path);
 		void setStream(QNetworkReply *rep);
-		void setStreamUrl(QUrl url0;
+		void setStreamUrl(QUrl url);
+
+		void setAutoDelete(bool enable);
 
 	public slots:
 		bool start();
@@ -38,6 +40,7 @@ class nDownload : public QObject
 
 	signals:
 		void progress(qint64, qint64);
+		void downloadFinished(bool);
 
 	private slots:
 		void write();
@@ -46,8 +49,9 @@ class nDownload : public QObject
 
 	private:
 		QNetworkReply *reply;
-		bool failed;
 		QFile file;
+		bool failed;
+		bool autoDelete;
 
 };
 
