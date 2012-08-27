@@ -92,9 +92,9 @@ void nDownload::error(QNetworkReply::NetworkError err) {
 void nDownload::finished() {
 	file.close();
 	reply->close();
-	nApp()->debug("Download of \"" + file.fileName() + "\" " + (failed ? "failed" : "finished"));
-	delete reply;
+	reply->deleteLater();
 	reply = 0;
+	nApp()->debug("Download of \"" + file.fileName() + "\" " + (failed ? "failed" : "finished"));
 }
 
 void nDownload::cancel() {
