@@ -19,29 +19,44 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 nDownload::nDownload(QNetworkReply *rep, QObject *parent) : QObject(parent) {
 	file.setFileName(nApp()->getPath() + "/unnamed");
-	reply = rep;
-
+	failed = false:
+	setStream(reply);
 }
 
 nDownload::nDownload(QUrl url, QObject *parent) : QObject(parent) {
 	file.setFileName(nApp()->getPath() + "/unnamed");
-	reply = nApp()->getNetworkAccessManager()->get(QNetworkRequest(url));
+	failed = false;
+	setStreamUrl(url);
+
 }
 
 nDownload::~nDownload() {
+	cancel();
 }
 
 void nDownload::setTargetFile(QString path) {
 	file.setFileName(path);
 }
 
+void nDownload::setStream(QNetworkReply *rep) {
+	cancel();
+	reply = rep;
+}
+
+void nDownload::setStreamUrl(QUrl url) {
+	cancel();
+	reply = nApp()->getNetworkAccessManager()->get(QNetworkRequest(url));
+}
+
 bool nDownload::start() {
+	failed = true;
 	if(!file.open(QIODevice::WriteOnly)) {
 		nApp()->error("unable to open " + file.fileName());
 		return false;
 	}
 	if(!reply || reply->error() != QNetworkReply::NoError) {
 		nApp()->error(QString("network error : code %1").arg(reply ? (int)reply->error() : -1));
+		file.close();
 		return false;
 	}
 	reply->setParent(this);
