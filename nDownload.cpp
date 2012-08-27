@@ -55,13 +55,19 @@ bool nDownload::start() {
 }
 
 void nDownload::write() {
-	int bytes =  file.write(reply->readAll());
-	if(!reply || bytes < 0) {
+	if(!reply) {
 		nApp()->error(QString("unable to read data from stream"));
 		cancel();
+	} else {
+		int bytes = file.write(reply->readAll());
+		if(bytes < 0) {
+			nApp()->error(QString("unable to read data from stream"));
+			cancel();
+		}			
+		nApp()->debug(QString("%1 bytes written").arg(bytes));
 	}
-	nApp()->debug(QString("%1 bytes written").arg(bytes));
 }
+
 
 void nDownload::error(QNetworkReply::NetworkError err) {
 	nApp()->error(QString("network error : code %1").arg((int)err));
@@ -77,7 +83,9 @@ void nDownload::finished() {
 }
 
 void nDownload::cancel() {
-	failed = true;
-	disconnect(reply);
-	finished();
+	if(reply) {
+		failed = true;
+		disconnect(reply);
+		finished();
+	}
 }
