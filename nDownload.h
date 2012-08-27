@@ -24,11 +24,13 @@ class nDownload : public QObject
 	Q_OBJECT
 
 	public:
-		nDownload(QNetworkReply *rep, QObject *parent = 0);
+		nDownload(QNetworkReply *rep = 0, QObject *parent = 0);
 		nDownload(QUrl url, QObject *parent = 0);
 		~nDownload();
 
 		void setTargetFile(QString path);
+		void setStream(QNetworkReply *rep);
+		void setStreamUrl(QUrl url0;
 
 	public slots:
 		bool start();
