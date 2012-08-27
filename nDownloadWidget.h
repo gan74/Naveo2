@@ -14,14 +14,31 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **********************************/
 
-#include <nNaveoApplication.h>
-#include <nWindow.h>
-#include <nDownloadWidget.h>
+#ifndef NDOWNLOADWIDGET_H
+#define NDOWNLOADWIDGET_H
 
-int main(int argc, char *argv[])
+#include <QtGui>
+#include <nDownload.h>
+
+class nDownloadWidget : public QWidget
 {
-	nNaveoApplication n(argc, argv);
-	nWindow *win = new nWindow;
-	win->show();
-	return n.exec();
-}
+    Q_OBJECT
+	public:
+		explicit nDownloadWidget(nDownload *dl, QWidget *parent = 0);
+
+	signals:
+
+	public slots:
+
+	private slots:
+		void updateProgress(qint64 done, qint64 total);
+
+	private:
+		nDownload *download;
+		QLabel *timeLabel;
+		QProgressBar *progressBar;
+		qint64 seconds;
+		qint64 itCount;
+};
+
+#endif // NDOWNLOADWIDGET_H

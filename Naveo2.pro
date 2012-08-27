@@ -8,8 +8,8 @@ QT       += core gui webkit network
 
 TARGET = Naveo2
 TEMPLATE = app
-#CONFIG += console
 
+#CONFIG += console
 #LIBS += libeay32
 #LIBS += libssleay32
 
@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     nUrlLineEdit.cpp \
     nSearchEngine.cpp \
     nDebugConsole.cpp \
-    nDownload.cpp
+    nDownload.cpp \
+    nDownloadWidget.cpp
 
 HEADERS  += nWindow.h \
     nNaveoApplication.h \
@@ -36,4 +37,5 @@ HEADERS  += nWindow.h \
     nUrlLineEdit.h \
     nSearchEngine.h \
     nDebugConsole.h \
-    nDownload.h
+    nDownload.h \
+    nDownloadWidget.h

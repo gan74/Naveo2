@@ -34,6 +34,12 @@ class nDownload : public QObject
 
 		void setAutoDelete(bool enable);
 
+		QString getName();
+		QUrl getUrl();
+
+		QTime getTimer();
+		int getElapsedTime();
+
 		bool isSuccessful();
 		bool isRunning();
 
@@ -52,6 +58,7 @@ class nDownload : public QObject
 
 	private:
 		QNetworkReply *reply;
+		QTime timer;
 		QFile file;
 		bool failed;
 		bool running;

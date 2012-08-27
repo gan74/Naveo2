@@ -40,7 +40,9 @@ void nNaveoApplication::error(QString err) {
 int nNaveoApplication::exec() {
 	QStringList args = arguments();
 	if(args.contains("-console")) {
+		QWidget *win = activeWindow();
 		console->show();
+		setActiveWindow(win);
 	}
 	return QApplication::exec();
 }

@@ -19,14 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 nDownload::nDownload(QNetworkReply *rep, QObject *parent) : QObject(parent) {
 	file.setFileName(nApp()->getPath() + "/unnamed");
-	setStream(rep);
+	reply = rep;
 	failed = false;
 	running = false;
 }
 
 nDownload::nDownload(QUrl url, QObject *parent) : QObject(parent) {
 	file.setFileName(nApp()->getPath() + "/unnamed");
-	setStreamUrl(url);
+	reply = nApp()->getNetworkAccessManager()->get(QNetworkRequest(url));
 	failed = false;
 	running = false;
 }
@@ -49,9 +49,26 @@ void nDownload::setStreamUrl(QUrl url) {
 	reply = nApp()->getNetworkAccessManager()->get(QNetworkRequest(url));
 }
 
+QString nDownload::getName() {
+	return file.fileName();
+}
+
+QUrl nDownload::getUrl() {
+	return reply ? reply->url() : QUrl();
+}
+
+QTime nDownload::getTimer() {
+	return timer;
+}
+
+int nDownload::getElapsedTime() {
+	return running ? timer.elapsed() : 0;
+}
+
 bool nDownload::isSuccessful() {
 	return !failed;
 }
+
 bool nDownload::isRunning() {
 	return running;
 }
@@ -81,7 +98,7 @@ bool nDownload::start() {
 	connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
 	connect(reply, SIGNAL(downloadProgress(qint64, qint64)), this, SIGNAL(progress(qint64, qint64)));
 	connect(reply, SIGNAL(finished()), this, SLOT(finished()));
-
+	timer.start();
 	running = true;
 	return true;
 }

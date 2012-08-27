@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <nWebView.h>
 #include <nNaveoApplication.h>
-#include <nDownload.h>
+#include <nDownloadWidget.h>
 
 nWebView::nWebView(QWidget *parent) : QWebView(parent) {
 	progress = 0;
@@ -46,6 +46,8 @@ void nWebView::unsupportedContent(QNetworkReply *reply) {
 			if(!dl->start()) {
 				nApp()->error(QString("unable to start download"));
 				dl->deleteLater();
+			} else {
+				(new nDownloadWidget(dl))->show();
 			}
 		} else {
 			nApp()->error(QString("network reply with size = 0"));
