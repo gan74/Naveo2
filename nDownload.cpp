@@ -56,7 +56,7 @@ bool nDownload::start() {
 
 void nDownload::write() {
 	if(!reply) {
-		nApp()->error(QString("unable to read data from stream"));
+		nApp()->error(QString("stream closed"));
 		cancel();
 	} else {
 		int bytes = file.write(reply->readAll());
