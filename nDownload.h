@@ -51,8 +51,6 @@ class nDownload : public QObject
 		QNetworkReply *reply;
 		QFile file;
 		bool failed;
-		bool autoDelete;
-
 };
 
 #endif // NDOWNLOAD_H
