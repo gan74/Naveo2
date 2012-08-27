@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef NNAVEOAPPLICATION_H
 #define NNAVEOAPPLICATION_H
 
-#define nApp nNaveoApplication::app
+#define nApp() nNaveoApplication::app()
 #include <QtWebKit>
 #include <QtGui>
 #include <nSearchEngine.h>
