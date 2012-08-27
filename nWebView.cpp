@@ -45,13 +45,14 @@ void nWebView::unsupportedContent(QNetworkReply *reply) {
 			dl->setTargetFile(nApp()->getPath() + url.toString().split("/").last());
 			if(!dl->start()) {
 				nApp()->error(QString("unable to start download"));
+				dl->deleteLater();
 			}
 		} else {
 			nApp()->error(QString("network reply with size = 0"));
-			delete reply;
+			reply->deleteLater();
 		}
 	} else {
 		nApp()->debug(QString("network code = %1").arg((int)reply->error()));
-		delete reply;
+		reply->deleteLater();
 	}
 }
