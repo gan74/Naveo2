@@ -49,7 +49,7 @@ QString nNaveoApplication::getPath() {
 	#ifdef Q_WS_WIN
 		return applicationDirPath() + "/";
 	#else
-		return applicationFilePath() + "/";
+		return QDir::homePath() + "/.Naveo2/";
 	#endif
 }
 
