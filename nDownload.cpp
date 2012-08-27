@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 nDownload::nDownload(QNetworkReply *rep, QObject *parent) : QObject(parent) {
 	file.setFileName(nApp()->getPath() + "/unnamed");
-	failed = false:
+	failed = false;
 	setStream(reply);
 }
 
@@ -46,6 +46,13 @@ void nDownload::setStream(QNetworkReply *rep) {
 void nDownload::setStreamUrl(QUrl url) {
 	cancel();
 	reply = nApp()->getNetworkAccessManager()->get(QNetworkRequest(url));
+}
+
+void nDownload::setAutoDelete(bool enable) {
+	disconnect(this, SIGNAL(downloadFinished(bool)), this, SLOT(deleteLater()));
+	if(enable) {
+		connect(this, SIGNAL(downloadFinished(bool)), this, SLOT(deleteLater()));
+	}
 }
 
 bool nDownload::start() {
@@ -95,6 +102,7 @@ void nDownload::finished() {
 	reply->deleteLater();
 	reply = 0;
 	nApp()->debug("Download of \"" + file.fileName() + "\" " + (failed ? "failed" : "finished"));
+	emit downloadFinished(!failed);
 }
 
 void nDownload::cancel() {
