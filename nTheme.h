@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class nTheme
 {
 	public:
-		static const int iconCount = 7;
+		static const int iconCount = 8;
 		enum IconRole {
 			Back = 0,
 			Forward = 1,
@@ -30,7 +30,8 @@ class nTheme
 			Reload = 3,
 			DefaultPage = 4,
 			Plugin = 5,
-			NewTab = 6
+			NewTab = 6,
+			Download = 7
 		};
 
 		nTheme();

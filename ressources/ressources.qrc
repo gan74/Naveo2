@@ -11,5 +11,6 @@
         <file>earth.png</file>
         <file>plugin.png</file>
         <file>theme/newTab.png</file>
+        <file>theme/download.png</file>
     </qresource>
 </RCC>

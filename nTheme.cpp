@@ -25,6 +25,7 @@ nTheme::nTheme() {
 	setPixmap(QPixmap(":/earth.png"), DefaultPage);
 	setPixmap(QPixmap(":/plugin.png"), Plugin);
 	setPixmap(QPixmap(":/theme/newTab.png"), NewTab);
+	setPixmap(QPixmap(":/theme/download.png"), Download);
 }
 
 void nTheme::setPixmap(QPixmap pix, IconRole ic) {

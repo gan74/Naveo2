@@ -14,32 +14,25 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **********************************/
 
-#ifndef NDOWNLOADWIDGET_H
-#define NDOWNLOADWIDGET_H
+#include <nDownloadManager.h>
+#include <nNaveoApplication.h>
 
-#include <QtGui>
-#include <nDownload.h>
+nDownloadManager::nDownloadManager(QWidget *parent) : QWidget(parent) {
+	setWindowTitle(tr("Naveo2 download manager"));
 
-class nDownloadWidget : public QWidget
-{
-    Q_OBJECT
-	public:
-		explicit nDownloadWidget(nDownload *dl, QWidget *parent = 0);
+	QVBoxLayout *layout = new QVBoxLayout(this);
 
-		static QString formatFileSize(quint64 size);
+	list = new QListWidget(this);
+	list->setAlternatingRowColors(true);
+	list->setIconSize(QSize(32, 32));
+	layout->addWidget(list);
 
-	signals:
 
-	public slots:
+	resize(520, 400);
+}
 
-	private slots:
-		void updateProgress(qint64 done, qint64 total);
-
-	private:
-		nDownload *download;
-		QProgressBar *progressBar;
-		qint64 seconds;
-		qint64 itCount;
-};
-
-#endif // NDOWNLOADWIDGET_H
+void nDownloadManager::addDownload(nDownload *download) {
+	list->insertItem(0, new QListWidgetItem(nApp()->getTheme()->getIcon(nTheme::Download), ""));
+	list->setItemWidget(list->item(0), new nDownloadWidget(download));
+	show();
+}

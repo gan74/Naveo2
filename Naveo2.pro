@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     nSearchEngine.cpp \
     nDebugConsole.cpp \
     nDownload.cpp \
-    nDownloadWidget.cpp
+    nDownloadWidget.cpp \
+    nDownloadManager.cpp
 
 HEADERS  += nWindow.h \
     nNaveoApplication.h \
@@ -38,4 +39,5 @@ HEADERS  += nWindow.h \
     nSearchEngine.h \
     nDebugConsole.h \
     nDownload.h \
-    nDownloadWidget.h
+    nDownloadWidget.h \
+    nDownloadManager.h

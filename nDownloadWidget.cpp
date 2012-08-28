@@ -24,19 +24,30 @@ nDownloadWidget::nDownloadWidget(nDownload *dl, QWidget *parent) : QWidget(paren
 	seconds = 0;
 	itCount = 0;
 
+	setFixedHeight(32);
+	setMinimumWidth(300);
+
 	progressBar = new QProgressBar(this);
 	#warning creating one new QCleanlooksStyle per download
 	progressBar->setStyle(new QCleanlooksStyle());
-	progressBar->setRange(0, 100);
+	progressBar->setAlignment(Qt::AlignHCenter);
+	progressBar->setRange(0, 0);
 
-	timeLabel = new QLabel(this);
 
 	QHBoxLayout *layout = new QHBoxLayout(this);
-	layout->addWidget(new QLabel("<strong>" + dl->getName().split("/").last() + "</strong><br><a href=\"" + dl->getUrl().toString() + "\"><sub>" + dl->getUrl().toString(QUrl::RemoveQuery) + "</sub></a>", this));
-	layout->addWidget(timeLabel);
-	layout->addWidget(progressBar);
+	layout->setContentsMargins(0, 1, 0, 1);
+	const int linkMaxLength = 75;
+	QString link = dl->getUrl().toString(QUrl::RemoveQuery);
+	layout->addWidget(new QLabel("<strong>" + dl->getName().split("/").last() + "</strong><br><a href=\"" + dl->getUrl().toString() + "\"><sub>" + (link.length() > linkMaxLength ? link.left(linkMaxLength - 3) + "..." : link) + "</sub></a>", this), 0);
+	layout->addWidget(progressBar, 1);
+	layout->addSpacing(5);
 
 	connect(dl, SIGNAL(progress(qint64,qint64)), this, SLOT(updateProgress(qint64,qint64)));
+}
+
+QString nDownloadWidget::formatFileSize(quint64 size) {
+	QString s = size >= 1048576 ? QString("%1Mo").arg(round((double)size / 104857.6) / 10) : (size >= 1024 ? QString("%1Ko").arg(round((double)size / 102.4) / 10) : QString("%1o").arg(size));
+	return s.contains(".") ? s : s + ".0";
 }
 
 void nDownloadWidget::updateProgress(qint64 done, qint64 total) {
@@ -45,12 +56,9 @@ void nDownloadWidget::updateProgress(qint64 done, qint64 total) {
 	seconds += totalTime;
 	itCount++;
 	#warning download time estimation keep all values
+	// why not use Naveo1 time estimation which is much more stable ?
 	qint64 remaining = seconds / itCount - download->getElapsedTime() /  1000;
-
-	if(remaining <= 60) {
-		timeLabel->setText(QString("%1s remaining").arg(remaining));
-	} else {
-		timeLabel->setText(QString("%1min %2s remaining").arg(remaining / 60).arg(remaining % 60));
-	}
-	progressBar->setValue(percent * 100);
+	progressBar->setFormat(QString("%p% : %1 (%2)  ").arg(remaining < 60 ? QString("%1s").arg(remaining) : QString("%1min %2s").arg(remaining / 60).arg(remaining % 60)).arg(formatFileSize(done)));
+	progressBar->setRange(0, total);
+	progressBar->setValue(done);
 }

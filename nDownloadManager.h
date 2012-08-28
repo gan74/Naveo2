@@ -14,32 +14,27 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **********************************/
 
-#ifndef NDOWNLOADWIDGET_H
-#define NDOWNLOADWIDGET_H
+#ifndef NDOWNLOADMANAGER_H
+#define NDOWNLOADMANAGER_H
 
 #include <QtGui>
-#include <nDownload.h>
+#include <nDownloadWidget.h>
 
-class nDownloadWidget : public QWidget
+class nDownloadManager : public QWidget
 {
     Q_OBJECT
-	public:
-		explicit nDownloadWidget(nDownload *dl, QWidget *parent = 0);
 
-		static QString formatFileSize(quint64 size);
+	public:
+		explicit nDownloadManager(QWidget *parent = 0);
 
 	signals:
 
 	public slots:
-
-	private slots:
-		void updateProgress(qint64 done, qint64 total);
+		void addDownload(nDownload *download);
 
 	private:
-		nDownload *download;
-		QProgressBar *progressBar;
-		qint64 seconds;
-		qint64 itCount;
+		QListWidget *list;
+
 };
 
-#endif // NDOWNLOADWIDGET_H
+#endif // NDOWNLOADMANAGER_H

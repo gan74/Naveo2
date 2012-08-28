@@ -20,6 +20,7 @@ nNaveoApplication::nNaveoApplication(int argc, char *argv[]) : QApplication(argc
 	theme = new nTheme();
 	console = new nDebugConsole();
 	engine = new nGoogleSearchEngine();
+	downloadManager = new nDownloadManager();
 	accessManager = new QNetworkAccessManager(this);
 	initWebSettings();
 	setWindowIcon(QIcon(":/icon.png"));
@@ -91,6 +92,10 @@ nTheme *nNaveoApplication::getTheme() {
 
 nSearchEngine *nNaveoApplication::getSearchEngine() {
 	return engine;
+}
+
+nDownloadManager *nNaveoApplication::getDownloadManager() {
+	return downloadManager;
 }
 
 QWebSettings *nNaveoApplication::getWebSettings() {

@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtGui>
 #include <nSearchEngine.h>
 #include <nDebugConsole.h>
+#include <nDownloadManager.h>
 #include <nTheme.h>
 
 class nNaveoApplication : public QApplication
@@ -34,6 +35,7 @@ class nNaveoApplication : public QApplication
 		QWebSettings *getWebSettings();
 		QLibrary *getLibrary(QString name);
 		QNetworkAccessManager *getNetworkAccessManager();
+		nDownloadManager *getDownloadManager();
 
 		QString getPath();
 		static nNaveoApplication *app();
@@ -51,6 +53,7 @@ class nNaveoApplication : public QApplication
 		nDebugConsole *console;
 		QWebSettings *webSettings;
 		QNetworkAccessManager *accessManager;
+		nDownloadManager *downloadManager;
 		QMap<QString, QLibrary *> libs;
 };
 

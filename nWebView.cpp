@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 nWebView::nWebView(QWidget *parent) : QWebView(parent) {
 	progress = 0;
-	load(QUrl("http://qt.nokia.com/downloads"));
+	load(QUrl("http://qt.nokia.com/downloads/sdk-windows-cpp")); // testing downloads
 	connect(this, SIGNAL(loadProgress(int)), this, SLOT(updateProgress(int)));
 	page()->setForwardUnsupportedContent(true);
 	connect(page(), SIGNAL(unsupportedContent(QNetworkReply*)), this, SLOT(unsupportedContent(QNetworkReply*)));
@@ -47,7 +47,7 @@ void nWebView::unsupportedContent(QNetworkReply *reply) {
 				nApp()->error(QString("unable to start download"));
 				dl->deleteLater();
 			} else {
-				(new nDownloadWidget(dl))->show();
+				nApp()->getDownloadManager()->addDownload(dl);
 			}
 		} else {
 			nApp()->error(QString("network reply with size = 0"));
