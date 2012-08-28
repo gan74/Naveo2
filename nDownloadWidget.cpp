@@ -25,6 +25,7 @@ nDownloadWidget::nDownloadWidget(nDownload *dl, QWidget *parent) : QWidget(paren
 	itCount = 0;
 
 	progressBar = new QProgressBar(this);
+	#warning creating one new QCleanlooksStyle per download
 	progressBar->setStyle(new QCleanlooksStyle());
 	progressBar->setRange(0, 100);
 
