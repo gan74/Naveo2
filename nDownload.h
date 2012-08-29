@@ -60,6 +60,7 @@ class nDownload : public QObject
 		QNetworkReply *reply;
 		QTime timer;
 		QFile file;
+		QUrl url;
 		bool failed;
 		bool running;
 };

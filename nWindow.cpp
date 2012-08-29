@@ -155,7 +155,6 @@ void nWindow::changeSettings() {
 	stopAction->setVisible(true);
 	reloadAction->setVisible(true);
 	connectTab(current);
-
 }
 
 void nWindow::loadProgress(int pro) {

@@ -26,7 +26,7 @@ class nDownloadWidget : public QWidget
 	public:
 		explicit nDownloadWidget(nDownload *dl, QWidget *parent = 0);
 
-		static QString formatFileSize(quint64 size);
+		static QString formatFileSize(quint64 size, bool forceMb = false);
 
 	signals:
 
@@ -34,12 +34,21 @@ class nDownloadWidget : public QWidget
 
 	private slots:
 		void updateProgress(qint64 done, qint64 total);
+		void finished(bool ok);
+
+		void open();
+		void retry();
 
 	private:
 		nDownload *download;
 		QProgressBar *progressBar;
+		QPushButton *retryButton;
+		QPushButton *openButton;
+		QPushButton *cancelButton;
 		qint64 seconds;
 		qint64 itCount;
+
+		static QCleanlooksStyle *progressBarStyle;
 };
 
 #endif // NDOWNLOADWIDGET_H

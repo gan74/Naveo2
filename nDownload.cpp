@@ -18,14 +18,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <nNaveoApplication.h>
 
 nDownload::nDownload(QNetworkReply *rep, QObject *parent) : QObject(parent) {
-	file.setFileName(nApp()->getPath() + "/unnamed");
+	file.setFileName(nApp()->getPath() + "unnamed");
 	reply = rep;
+	url = reply->url();
 	failed = false;
 	running = false;
 }
 
 nDownload::nDownload(QUrl url, QObject *parent) : QObject(parent) {
-	file.setFileName(nApp()->getPath() + "/unnamed");
+	file.setFileName(nApp()->getPath() + "unnamed");
+	this->url = url;
 	reply = nApp()->getNetworkAccessManager()->get(QNetworkRequest(url));
 	failed = false;
 	running = false;
@@ -42,10 +44,12 @@ void nDownload::setTargetFile(QString path) {
 void nDownload::setStream(QNetworkReply *rep) {
 	cancel();
 	reply = rep;
+	url = reply->url();
 }
 
 void nDownload::setStreamUrl(QUrl url) {
 	cancel();
+	this->url = url;
 	reply = nApp()->getNetworkAccessManager()->get(QNetworkRequest(url));
 }
 
@@ -54,7 +58,7 @@ QString nDownload::getName() {
 }
 
 QUrl nDownload::getUrl() {
-	return reply ? reply->url() : QUrl();
+	return url;
 }
 
 QTime nDownload::getTimer() {
@@ -104,14 +108,16 @@ bool nDownload::start() {
 }
 
 void nDownload::write() {
-	if(!reply) {
-		nApp()->error(QString("stream closed"));
-		cancel();
-	} else {
-		if(file.write(reply->readAll()) < 0) {
-			nApp()->error(QString("unable to read data from stream"));
+	if(running) {
+		if(!reply) {
+			nApp()->error(QString("stream closed"));
 			cancel();
-		}			
+		} else {
+			if(file.write(reply->readAll()) < 0) {
+				nApp()->error(QString("unable to read data from stream"));
+				cancel();
+			}
+		}
 	}
 }
 
@@ -122,19 +128,25 @@ void nDownload::error(QNetworkReply::NetworkError err) {
 }
 
 void nDownload::finished() {
-	running = false;
-	file.close();
-	if(reply) {
-		reply->close();
-		reply->deleteLater();
-		reply = 0;
+	if(running)  {
+		running = false;
+		file.close();
+		if(reply) {
+			if(failed) {
+				reply->abort();
+			} else {
+				reply->close();
+			}
+			reply->deleteLater();
+			reply = 0;
+		}
+		nApp()->debug("Download of \"" + file.fileName() + "\" " + (failed ? "failed" : "finished"));
+		emit downloadFinished(!failed);
 	}
-	nApp()->debug("Download of \"" + file.fileName() + "\" " + (failed ? "failed" : "finished"));
-	emit downloadFinished(!failed);
 }
 
 void nDownload::cancel() {
-	if(reply) {
+	if(running && reply) {
 		failed = true;
 		disconnect(reply);
 		finished();
