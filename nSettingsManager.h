@@ -14,13 +14,42 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **********************************/
 
-#include <nSearchEngine.h>
-#include <nNaveoApplication.h>
+#ifndef NSETTINGS_H
+#define NSETTINGS_H
 
-nGoogleSearchEngine::nGoogleSearchEngine() {
-}
+#include <QtCore>
 
-QString nGoogleSearchEngine::search(QString s) {
-	QString base = QString("http://www.google.com/search?hl=") + nSettings(nSettingsManager::Locale).toLocale().name().split("_").last().toLower() + QString("&q=");
-	return base + s.split(" ").join("+");
-}
+class nSettingsManager : public QObject
+{
+	Q_OBJECT
+
+	public:
+		static const int maxSettings = 3;
+		enum Settings {
+			SessionName = 0,
+			Locale = 1,
+			HideStopButton = 2
+
+		};
+
+
+		nSettingsManager(QObject *parent);
+		~nSettingsManager();
+
+		QVariant getSettings(Settings s);
+		void setSettings(Settings s, QVariant v);
+
+	public slots:
+		void save();
+		void load();
+
+	signals:
+		void settingsChanged();
+
+	private:
+		QTimer *timer;
+		QVariant *settings;
+		QString *names;
+};
+
+#endif // NSETTINGS_H

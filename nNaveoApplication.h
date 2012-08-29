@@ -24,9 +24,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <nDebugConsole.h>
 #include <nDownloadManager.h>
 #include <nTheme.h>
+#include <nSettingsManager.h>
+
+#define nSettings(s) nApp()->getSettingsManager()->getSettings(s)
 
 class nNaveoApplication : public QApplication
 {
+	Q_OBJECT
+
 	public:
 		nNaveoApplication(int argc, char *argv[]);
 
@@ -36,6 +41,7 @@ class nNaveoApplication : public QApplication
 		QLibrary *getLibrary(QString name);
 		QNetworkAccessManager *getNetworkAccessManager();
 		nDownloadManager *getDownloadManager();
+		nSettingsManager *getSettingsManager();
 
 		QString getPath();
 		static nNaveoApplication *app();
@@ -44,6 +50,12 @@ class nNaveoApplication : public QApplication
 		void error(QString err);
 
 		int exec();
+
+	signals:
+
+	public slots:
+		void close();
+		void settingsChanged();
 
 	private:
 		void initWebSettings();
@@ -54,6 +66,7 @@ class nNaveoApplication : public QApplication
 		QWebSettings *webSettings;
 		QNetworkAccessManager *accessManager;
 		nDownloadManager *downloadManager;
+		nSettingsManager *settings;
 		QMap<QString, QLibrary *> libs;
 };
 

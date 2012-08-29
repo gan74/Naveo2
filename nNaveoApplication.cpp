@@ -17,13 +17,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <nNaveoApplication.h>
 
 nNaveoApplication::nNaveoApplication(int argc, char *argv[]) : QApplication(argc, argv) {
-	theme = new nTheme();
+	connect(this, SIGNAL(aboutToQuit()), this, SLOT(close()));
+
 	console = new nDebugConsole();
+	settings = new nSettingsManager(this);
+	theme = new nTheme();
 	engine = new nGoogleSearchEngine();
 	downloadManager = new nDownloadManager();
 	accessManager = new QNetworkAccessManager(this);
+
 	initWebSettings();
 	setWindowIcon(QIcon(":/icon.png"));
+	connect(settings, SIGNAL(settingsChanged()), this, SLOT(settingsChanged()));
+	settingsChanged();
 }
 
 nNaveoApplication *nNaveoApplication::app() {
@@ -46,6 +52,21 @@ int nNaveoApplication::exec() {
 		setActiveWindow(win);
 	}
 	return QApplication::exec();
+}
+
+
+void nNaveoApplication::close() {
+	settings->save();
+}
+
+void nNaveoApplication::settingsChanged() {
+	QTranslator translator;
+	if(!translator.load(QString(getPath() + "/locale/qt_") +  nSettings(nSettingsManager::Locale).toLocale().name())) {
+		error("Unable to load translation \"" + settings->getSettings(nSettingsManager::Locale).toLocale().name() + "\"");
+	} else {
+		debug("translation loaded");
+		installTranslator(&translator);
+	}
 }
 
 QString nNaveoApplication::getPath() {
@@ -104,4 +125,8 @@ QWebSettings *nNaveoApplication::getWebSettings() {
 
 QNetworkAccessManager *nNaveoApplication::getNetworkAccessManager() {
 	return accessManager;
+}
+
+nSettingsManager *nNaveoApplication::getSettingsManager() {
+	return settings;
 }

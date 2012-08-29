@@ -55,6 +55,8 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 	setWindowTitle("Naveo2");
 	setMinimumSize(300, 200);
 
+	connect(nApp()->getSettingsManager(), SIGNAL(settingsChanged()), this, SLOT(changeSettings()));
+
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	layout->setContentsMargins(0, 0, 0, 0);
 	layout->setSpacing(0);
@@ -147,6 +149,25 @@ void nWindow::urlEntered(QUrl url) {
 	qobject_cast<nWebView *>(stack->currentWidget())->load(url);
 }
 
+void nWindow::changeSettings() {
+	stopAction->setEnabled(true);
+	reloadAction->setEnabled(true);
+	stopAction->setVisible(true);
+	reloadAction->setVisible(true);
+	connectTab(current);
+
+}
+
+void nWindow::loadProgress(int pro) {
+	if(nSettings(nSettingsManager::HideStopButton).toBool()) {
+		stopAction->setVisible(pro != 100);
+		reloadAction->setVisible(pro == 100);
+	} else {
+		stopAction->setEnabled(pro != 100);
+		reloadAction->setEnabled(pro == 100);
+	}
+}
+
 void nWindow::connectTab(nWebView *v) {
 	if(current) {
 		disconnectTab(current);
@@ -164,6 +185,8 @@ void nWindow::connectTab(nWebView *v) {
 	connect(v, SIGNAL(loadStarted()), urlEdit, SLOT(loadStarted()));
 	connect(v, SIGNAL(loadProgress(int)), urlEdit, SLOT(loadProgress(int)));
 	connect(v, SIGNAL(loadFinished(bool)), urlEdit, SLOT(loadFinished(bool)));
+	connect(v, SIGNAL(loadProgress(int)), this, SLOT(loadProgress(int)));
+	loadProgress(v->getProgress());
 	current = v;
 }
 
@@ -176,4 +199,5 @@ void nWindow::disconnectTab(nWebView *v) {
 	disconnect(v, SIGNAL(loadStarted()), urlEdit, SLOT(loadStarted()));
 	disconnect(v, SIGNAL(loadProgress(int)), urlEdit, SLOT(loadProgress(int)));
 	disconnect(v, SIGNAL(loadFinished(bool)), urlEdit, SLOT(loadFinished(bool)));
+	disconnect(v, SIGNAL(loadProgress(int)), this, SLOT(loadProgress(int)));
 }

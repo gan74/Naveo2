@@ -39,8 +39,11 @@ class nWindow : public QWidget
 		void tabMoved(int from, int to);
 		void currentTabChanged(int index);
 		void tabTitleChanged(QString title);
+		void loadProgress(int pro);
 
 		void urlEntered(QUrl url);
+
+		void changeSettings();
 
 	private:
 		int tabIndex(QObject *o) {
