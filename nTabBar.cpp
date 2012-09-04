@@ -37,7 +37,7 @@ int nTabBar::count() const {
 }
 
 void nTabBar::tabMoved(int from, int to) {
-	if(to == QTabBar::count() - 2) {
+	if(from == count() && to == QTabBar::count() - 2) {
 		moveTabButton = true;
 	} else if(moveTabButton && from == QTabBar::count() - 2) {
 		moveTabButton = false;
@@ -53,13 +53,12 @@ void nTabBar::mousePressEvent(QMouseEvent *event) {
 	QTabBar::mousePressEvent(event);
 }
 
-
 void nTabBar::mouseReleaseEvent(QMouseEvent *event) {
+	QTabBar::mouseReleaseEvent(event);
 	if(moveTabButton == true) {
-		moveTab(QTabBar::count() - 2, count());
 		moveTabButton = false;
+		moveTab(QTabBar::count() - 2, count());
 	}
-	QTabBar::mousePressEvent(event);
 }
 
 void nTabBar::contextMenuEvent(QContextMenuEvent *event) {
