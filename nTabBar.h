@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define NTABBAR_H
 
 #include <QTabBar>
+#include <QMenu>
 
 class nTabBar : public QTabBar
 {
@@ -36,9 +37,21 @@ class nTabBar : public QTabBar
 	signals:
 		void newTabRequested();
 
+	private slots:
+		void closeContextMenu();
+		void tabMoved(int from, int to);
+
 	protected:
 		void tabRemoved(int index);
 		void mousePressEvent(QMouseEvent *event);
+		void mouseReleaseEvent(QMouseEvent *event);
+		void contextMenuEvent(QContextMenuEvent *event);
+
+
+		QMenu *createContextMenuForTab(int index);
+
+		QMenu *contextMenu;
+		bool moveTabButton;
 
 
 

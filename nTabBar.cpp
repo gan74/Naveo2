@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <nNaveoApplication.h>
 
 nTabBar::nTabBar(QWidget *parent) : QTabBar(parent) {
+	contextMenu = 0;
+	moveTabButton = false;
 	setMovable(true);
 	setTabsClosable(true);
 	setUsesScrollButtons(false);
@@ -27,18 +29,55 @@ nTabBar::nTabBar(QWidget *parent) : QTabBar(parent) {
 	setTabButton(0, QTabBar::RightSide, 0);
 	setElideMode(Qt::ElideRight);
 	setStyleSheet("QTabBar::tab { width: 220px; } QTabBar::tab:last { width: 31px; }");
+	connect(this, SIGNAL(tabMoved(int,int)), this, SLOT(tabMoved(int,int)));
 }
 
 int nTabBar::count() const {
 	return QTabBar::count() - 1;
 }
 
+void nTabBar::tabMoved(int from, int to) {
+	if(to == QTabBar::count() - 2) {
+		moveTabButton = true;
+	} else if(moveTabButton && from == QTabBar::count() - 2) {
+		moveTabButton = false;
+	}
+}
+
 void nTabBar::mousePressEvent(QMouseEvent *event) {
+	closeContextMenu();
 	if(event->button() == Qt::LeftButton && tabAt(event->pos()) == count()) {
 		emit newTabRequested();
 		return;
 	}
 	QTabBar::mousePressEvent(event);
+}
+
+
+void nTabBar::mouseReleaseEvent(QMouseEvent *event) {
+	if(moveTabButton == true) {
+		moveTab(QTabBar::count() - 2, count());
+		moveTabButton = false;
+	}
+	QTabBar::mousePressEvent(event);
+}
+
+void nTabBar::contextMenuEvent(QContextMenuEvent *event) {
+	contextMenu = createContextMenuForTab(tabAt(event->pos()));
+	contextMenu->exec(mapToGlobal(event->pos()));
+	connect(contextMenu, SIGNAL(triggered(QAction*)), this, SLOT(closeContextMenu()));
+}
+
+void nTabBar::closeContextMenu() {
+	if(contextMenu) {
+		contextMenu->deleteLater();
+		contextMenu = 0;
+	}
+}
+
+QMenu *nTabBar::createContextMenuForTab(int) {
+	QMenu *menu = new QMenu(this);
+	return menu;
 }
 
 int nTabBar::insertTab(int index, const QIcon &icon, const QString &text) {

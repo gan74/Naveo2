@@ -131,7 +131,9 @@ void nWindow::closeTab(int index) {
 }
 
 void nWindow::tabMoved(int from, int to) {
-	tabIndexes.swap(from, to);
+	if(std::max(from, to) < tabBar->count()) {
+		tabIndexes.swap(from, to);
+	}
 }
 
 void nWindow::currentTabChanged(int index) {
