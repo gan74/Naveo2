@@ -37,8 +37,12 @@ class nTheme
 		nTheme();
 
 		void setPixmap(QPixmap pix, IconRole ic);
-		QPixmap getPixmap(IconRole ic);
-		QIcon getIcon(IconRole ic);
+		QPixmap getPixmap(IconRole ic) const;
+		QIcon getIcon(IconRole ic) const;
+
+		virtual QIcon getStyleIcon(QStyle::StandardPixmap ic) const {
+			return QApplication::style()->standardIcon(ic);
+		}
 
 
 	private:

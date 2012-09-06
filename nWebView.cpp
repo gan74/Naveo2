@@ -17,21 +17,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <nWebView.h>
 #include <nNaveoApplication.h>
 #include <nDownloadWidget.h>
+#include <nWebPage.h>
 
 nWebView::nWebView(QWidget *parent) : QWebView(parent) {
 	progress = 0;
-	load(QUrl("http://qt.nokia.com/downloads/"));
-	connect(this, SIGNAL(loadProgress(int)), this, SLOT(updateProgress(int)));
+	page()->deleteLater();
+	setPage(new nWebPage());
+	setRenderHints(QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing | QPainter::Antialiasing);
 	page()->setForwardUnsupportedContent(true);
+
+	connect(this, SIGNAL(loadProgress(int)), this, SLOT(updateProgress(int)));
 	connect(page(), SIGNAL(unsupportedContent(QNetworkReply*)), this, SLOT(unsupportedContent(QNetworkReply*)));
+
+	load(QUrl("http://www.google.com/"));
 }
 
-int nWebView::getProgress() {
+int nWebView::getProgress() const {
 	return progress;
 }
 
 void nWebView::updateProgress(int pro) {
 	progress = pro;
+	if(pro == 100) {
+		nApp()->getHistoryManager()->addEntry(history());
+	}
+}
+
+nWebView *nWebView::createWindow(QWebPage::WebWindowType type) {
+	if(type == QWebPage::WebModalDialog) {
+		// do popup blocking stuffs here
+	}
+	nWebView *view = new nWebView;
+	emit viewCreated(view);
+	return view;
 }
 
 void nWebView::unsupportedContent(QNetworkReply *reply) {

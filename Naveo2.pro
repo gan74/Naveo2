@@ -29,7 +29,10 @@ SOURCES += main.cpp\
     nDownload.cpp \
     nDownloadWidget.cpp \
     nDownloadManager.cpp \
-    nSettingsManager.cpp
+    nSettingsManager.cpp \
+    nWebPage.cpp \
+    nHistoryManager.cpp \
+    nHistoryEntry.cpp
 
 HEADERS  += nWindow.h \
     nNaveoApplication.h \
@@ -42,4 +45,7 @@ HEADERS  += nWindow.h \
     nDownload.h \
     nDownloadWidget.h \
     nDownloadManager.h \
-    nSettingsManager.h
+    nSettingsManager.h \
+    nWebPage.h \
+    nHistoryManager.h \
+    nHistoryEntry.h

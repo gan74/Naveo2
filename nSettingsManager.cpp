@@ -24,6 +24,7 @@ nSettingsManager::nSettingsManager(QObject *parent) : QObject(parent) {
 	names[SessionName] = "session";
 	names[Locale] = "locale";
 	names[HideStopButton] = "hideStopButton";
+	names[HistoryFilePath] = "historyFilePath";
 
 	timer = new QTimer(this);
 	timer->setInterval(2500);
@@ -34,7 +35,7 @@ nSettingsManager::nSettingsManager(QObject *parent) : QObject(parent) {
 nSettingsManager::~nSettingsManager() {
 }
 
-QVariant nSettingsManager::getSettings(Settings s) {
+QVariant nSettingsManager::getSettings(Settings s) const {
 	return settings[s];
 }
 
@@ -45,13 +46,19 @@ void nSettingsManager::setSettings(Settings s, QVariant v) {
 	}
 }
 
-void nSettingsManager::save() {
+void nSettingsManager::saveEntry(QSettings *out, Settings e) const {
+	out->setValue(names[e], getSettings(e));
+}
+
+void nSettingsManager::save() const {
 	QSettings s(nApp()->getPath() + "settings.ini", QSettings::IniFormat);
 	s.setValue(names[SessionName], getSettings(SessionName).toString());
 
 	s.beginGroup(getSettings(SessionName).toString());
 	s.setValue(names[Locale], getSettings(Locale).toLocale().name());
-	s.setValue(names[HideStopButton], getSettings(HideStopButton));
+	for(int i = 2; i != maxSettings; i++) {
+		saveEntry(&s, (Settings)i);
+	}
 	s.endGroup();
 
 	nApp()->debug("Settings saved in " + nApp()->getPath() + "settings.ini");
@@ -65,6 +72,7 @@ void nSettingsManager::load() {
 	s.beginGroup(getSettings(SessionName).toString());
 	setSettings(Locale, QLocale(s.value(names[Locale], QLocale::system().name()).toString()));
 	setSettings(HideStopButton, s.value(names[HideStopButton], true));
+	setSettings(HistoryFilePath, s.value(names[HistoryFilePath], nApp()->getPath() + getSettings(SessionName).toString() + "_history"));
 	s.endGroup();
 
 	blockSignals(false);

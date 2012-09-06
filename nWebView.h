@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define NWEBVIEW_H
 
 #include <QtWebKit>
+#include <QNetworkReply>
 
 class nWebView : public QWebView
 {
@@ -26,15 +27,17 @@ class nWebView : public QWebView
 	public:
 		explicit nWebView(QWidget *parent = 0);
 
-		int getProgress();
+		int getProgress() const;
 
 	signals:
-
-	public slots:
+		void viewCreated(nWebView *view);
 
 	private slots:
 		void updateProgress(int pro);
 		void unsupportedContent(QNetworkReply *reply);
+
+	protected:
+		nWebView *createWindow(QWebPage::WebWindowType type);
 
 	private:
 		int progress;

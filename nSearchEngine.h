@@ -24,7 +24,13 @@ class nSearchEngine
 	public:
 		nSearchEngine() {}
 
-		virtual QString search(QString s) = 0;
+		QString search(QString s, bool privateMode = false) {
+			return privateMode ? processPrivate(s) : process(s);
+		}
+
+	protected:
+		virtual QString process(QString s) = 0;
+		virtual QString processPrivate(QString s) const = 0 ; // for ease of use rather than for safety (because easy to bypass
 };
 
 class nGoogleSearchEngine : public nSearchEngine
@@ -32,7 +38,9 @@ class nGoogleSearchEngine : public nSearchEngine
 	public:
 		nGoogleSearchEngine();
 
-		QString search(QString s);
+	protected:
+		QString process(QString s);
+		QString processPrivate(QString s) const;
 };
 
 #endif // NSEARCHENGINE_H

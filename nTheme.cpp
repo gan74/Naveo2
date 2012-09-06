@@ -32,11 +32,11 @@ void nTheme::setPixmap(QPixmap pix, IconRole ic) {
 	icons[(int)ic] = pix;
 }
 
-QPixmap nTheme::getPixmap(IconRole ic) {
+QPixmap nTheme::getPixmap(IconRole ic) const {
 	return icons[(int)ic];
 }
 
-QIcon nTheme::getIcon(IconRole ic) {
+QIcon nTheme::getIcon(IconRole ic) const {
 	return QIcon(getPixmap(ic));
 }
 

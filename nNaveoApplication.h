@@ -19,12 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define nApp nNaveoApplication::app
 #include <QtWebKit>
+#include <QWebSettings>
 #include <QtGui>
 #include <nSearchEngine.h>
 #include <nDebugConsole.h>
 #include <nDownloadManager.h>
 #include <nTheme.h>
 #include <nSettingsManager.h>
+#include <nHistoryManager.h>
 
 #define nSettings(s) nApp()->getSettingsManager()->getSettings(s)
 
@@ -35,15 +37,17 @@ class nNaveoApplication : public QApplication
 	public:
 		nNaveoApplication(int argc, char *argv[]);
 
-		nTheme *getTheme();
-		nSearchEngine *getSearchEngine();
-		QWebSettings *getWebSettings();
 		QLibrary *getLibrary(QString name);
-		QNetworkAccessManager *getNetworkAccessManager();
-		nDownloadManager *getDownloadManager();
-		nSettingsManager *getSettingsManager();
 
-		QString getPath();
+		nTheme *getTheme() const;
+		nSearchEngine *getSearchEngine() const;
+		QWebSettings *getWebSettings() const;
+		QNetworkAccessManager *getNetworkAccessManager() const;
+		nDownloadManager *getDownloadManager() const;
+		nSettingsManager *getSettingsManager() const;
+		nHistoryManager *getHistoryManager() const;
+
+		QString getPath() const;
 		static nNaveoApplication *app();
 
 		void debug(QString msg);
@@ -67,6 +71,7 @@ class nNaveoApplication : public QApplication
 		QNetworkAccessManager *accessManager;
 		nDownloadManager *downloadManager;
 		nSettingsManager *settings;
+		nHistoryManager *historyManager;
 		QMap<QString, QLibrary *> libs;
 };
 

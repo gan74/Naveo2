@@ -34,14 +34,14 @@ class nDownload : public QObject
 
 		void setAutoDelete(bool enable);
 
-		QString getName();
-		QUrl getUrl();
+		QString getName() const;
+		QUrl getUrl() const;
 
-		QTime getTimer();
-		int getElapsedTime();
+		QTime getTimer() const;
+		int getElapsedTime() const;
 
-		bool isSuccessful();
-		bool isRunning();
+		bool isSuccessful() const;
+		bool isRunning() const;
 
 	public slots:
 		bool start();

@@ -14,19 +14,36 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **********************************/
 
-#include <nSearchEngine.h>
-#include <nNaveoApplication.h>
+#ifndef NHISTORYMANAGER_H
+#define NHISTORYMANAGER_H
 
-nGoogleSearchEngine::nGoogleSearchEngine() {
-}
+#include <QtGui>
+#include <nHistoryEntry.h>
 
-QString nGoogleSearchEngine::process(QString s) {
-	return processPrivate(s);
-}
+class nHistoryManager : public QWidget
+{
+    Q_OBJECT
+	public:
+		explicit nHistoryManager(QWidget *parent = 0);
 
-QString nGoogleSearchEngine::processPrivate(QString s) const {
-	QString base = QString("http://www.google.com/search?hl=") + nSettings(nSettingsManager::Locale).toLocale().name().split("_").last().toLower() + QString("&q=");
-	return base + s.split(" ").join("+");
-}
+	signals:
+
+	public slots:
+		void refresh();
+		void addEntry(QWebHistory *h);
+
+		void save() const;
+		void load();
 
 
+	protected:
+		QTreeWidgetItem *createItem(nHistoryEntry &entry);
+
+	private:
+		QTreeWidget *tree;
+		QList<nHistoryEntry> history;
+
+
+};
+
+#endif // NHISTORYMANAGER_H

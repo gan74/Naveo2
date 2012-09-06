@@ -22,11 +22,15 @@ nNaveoApplication::nNaveoApplication(int argc, char *argv[]) : QApplication(argc
 	console = new nDebugConsole();
 	settings = new nSettingsManager(this);
 	theme = new nTheme();
+
+	initWebSettings();
+
 	engine = new nGoogleSearchEngine();
 	downloadManager = new nDownloadManager();
 	accessManager = new QNetworkAccessManager(this);
+	historyManager = new nHistoryManager();
 
-	initWebSettings();
+
 	setWindowIcon(QIcon(":/icon.png"));
 	connect(settings, SIGNAL(settingsChanged()), this, SLOT(settingsChanged()));
 	settingsChanged();
@@ -46,11 +50,14 @@ void nNaveoApplication::error(QString err) {
 
 int nNaveoApplication::exec() {
 	QStringList args = arguments();
+	QWidget *win = activeWindow();
 	if(args.contains("-console")) {
-		QWidget *win = activeWindow();
 		console->show();
-		setActiveWindow(win);
 	}
+	if(args.contains("-hmanager")) {
+		historyManager->show();
+	}
+	setActiveWindow(win);
 	return QApplication::exec();
 }
 
@@ -69,7 +76,7 @@ void nNaveoApplication::settingsChanged() {
 	}
 }
 
-QString nNaveoApplication::getPath() {
+QString nNaveoApplication::getPath() const {
 	#ifdef Q_WS_WIN
 		return applicationDirPath() + "/";
 	#else
@@ -94,8 +101,8 @@ void nNaveoApplication::initWebSettings() {
 	webSettings->setAttribute(QWebSettings::JavascriptCanOpenWindows , true);
 	webSettings->setAttribute(QWebSettings::JavaEnabled, true);
 	webSettings->setAttribute(QWebSettings::PrivateBrowsingEnabled , false);
-	QWebSettings::setWebGraphic(QWebSettings::MissingPluginGraphic, theme->getPixmap(nTheme::Plugin));
-	QWebSettings::setWebGraphic(QWebSettings::DefaultFrameIconGraphic, theme->getPixmap(nTheme::DefaultPage));
+	webSettings->setWebGraphic(QWebSettings::MissingPluginGraphic, theme->getPixmap(nTheme::Plugin));
+	webSettings->setWebGraphic(QWebSettings::DefaultFrameIconGraphic, theme->getPixmap(nTheme::DefaultPage));
 }
 
 QLibrary *nNaveoApplication::getLibrary(QString name) {
@@ -107,26 +114,31 @@ QLibrary *nNaveoApplication::getLibrary(QString name) {
 	return l;
 }
 
-nTheme *nNaveoApplication::getTheme() {
+nTheme *nNaveoApplication::getTheme() const {
 	return theme;
 }
 
-nSearchEngine *nNaveoApplication::getSearchEngine() {
+nSearchEngine *nNaveoApplication::getSearchEngine() const {
 	return engine;
 }
 
-nDownloadManager *nNaveoApplication::getDownloadManager() {
+nDownloadManager *nNaveoApplication::getDownloadManager() const {
 	return downloadManager;
 }
 
-QWebSettings *nNaveoApplication::getWebSettings() {
+QWebSettings *nNaveoApplication::getWebSettings() const {
 	return webSettings;
 }
 
-QNetworkAccessManager *nNaveoApplication::getNetworkAccessManager() {
+QNetworkAccessManager *nNaveoApplication::getNetworkAccessManager() const {
 	return accessManager;
 }
 
-nSettingsManager *nNaveoApplication::getSettingsManager() {
+nSettingsManager *nNaveoApplication::getSettingsManager() const {
 	return settings;
 }
+
+nHistoryManager *nNaveoApplication::getHistoryManager() const {
+	return historyManager;
+}
+

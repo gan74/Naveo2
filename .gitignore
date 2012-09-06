@@ -12,6 +12,7 @@ tmp/
 *.swp
 Makefile.*
 Makefile
+Naveo2.pro.*
 object_script.*
 *~.nib
 local.properties

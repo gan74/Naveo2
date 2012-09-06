@@ -100,9 +100,12 @@ nWindow::~nWindow() {
 }
 
 void nWindow::addTab() {
-	nWebView *view = new nWebView();
-	connect(view, SIGNAL(titleChanged(QString)), this, SLOT(tabTitleChanged(QString)));
+	addTab(new nWebView());
+}
 
+void nWindow::addTab(nWebView *view) {
+	connect(view, SIGNAL(titleChanged(QString)), this, SLOT(tabTitleChanged(QString)));
+	connect(view, SIGNAL(viewCreated(nWebView*)), this, SLOT(addTab(nWebView*)));
 	stack->addWidget(view);
 	tabIndexes.append(tabBar->count());
 	int index = tabBar->addTab(tr("New tab"));

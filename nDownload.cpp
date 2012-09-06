@@ -53,27 +53,27 @@ void nDownload::setStreamUrl(QUrl url) {
 	reply = nApp()->getNetworkAccessManager()->get(QNetworkRequest(url));
 }
 
-QString nDownload::getName() {
+QString nDownload::getName() const {
 	return file.fileName();
 }
 
-QUrl nDownload::getUrl() {
+QUrl nDownload::getUrl() const {
 	return url;
 }
 
-QTime nDownload::getTimer() {
+QTime nDownload::getTimer() const {
 	return timer;
 }
 
-int nDownload::getElapsedTime() {
+int nDownload::getElapsedTime() const {
 	return running ? timer.elapsed() : 0;
 }
 
-bool nDownload::isSuccessful() {
+bool nDownload::isSuccessful() const {
 	return !failed;
 }
 
-bool nDownload::isRunning() {
+bool nDownload::isRunning() const {
 	return running;
 }
 

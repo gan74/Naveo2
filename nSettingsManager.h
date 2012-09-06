@@ -24,29 +24,30 @@ class nSettingsManager : public QObject
 	Q_OBJECT
 
 	public:
-		static const int maxSettings = 3;
+		static const int maxSettings = 4;
 		enum Settings {
 			SessionName = 0,
 			Locale = 1,
-			HideStopButton = 2
-
+			HideStopButton = 2,
+			HistoryFilePath = 3
 		};
 
 
 		nSettingsManager(QObject *parent);
 		~nSettingsManager();
 
-		QVariant getSettings(Settings s);
+		QVariant getSettings(Settings s) const;
 		void setSettings(Settings s, QVariant v);
 
 	public slots:
-		void save();
+		void save() const;
 		void load();
 
 	signals:
 		void settingsChanged();
 
 	private:
+		void saveEntry(QSettings *out, Settings e) const;
 		QTimer *timer;
 		QVariant *settings;
 		QString *names;
