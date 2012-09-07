@@ -42,6 +42,7 @@ void nHistoryManager::load() {
 	QFile file(nSettings(nSettingsManager::HistoryFilePath).toString());
 	if(!file.open(QIODevice::ReadOnly)) {
 		nApp()->error("Unable to open " + file.fileName());
+		refresh();
 		return;
 	}
 
