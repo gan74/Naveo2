@@ -53,6 +53,7 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 
 	setWindowTitle("Naveo2");
 	setMinimumSize(300, 200);
+	setWindowIcon(QIcon(":/icon.png"));
 
 	connect(nApp()->getSettingsManager(), SIGNAL(settingsChanged()), this, SLOT(changeSettings()));
 
