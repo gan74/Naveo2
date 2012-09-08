@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 	if(!parent) {
 		#ifdef Q_WS_WIN
-			if (QSysInfo::WindowsVersion >= QSysInfo::WV_VISTA)	{
+			if(QSysInfo::WindowsVersion >= QSysInfo::WV_VISTA) {
 				QLibrary *winapi = nApp()->getLibrary("dwmapi");
 				pDwmIsCompositionEnabled = (PtrDwmIsCompositionEnabled)winapi->resolve("DwmIsCompositionEnabled");
 				BOOL enabled = FALSE;
@@ -46,7 +46,6 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 					setAutoFillBackground(false);
 					setAttribute(Qt::WA_TranslucentBackground);
 				}
-
 			}
 		#endif
 	}
@@ -144,13 +143,16 @@ void nWindow::currentTabChanged(int index) {
 	connectTab(qobject_cast<nWebView *>(stack->currentWidget()));
 }
 
-void nWindow::tabTitleChanged(QString title) {
+void nWindow::tabTitleChanged(const QString &title) {
 	if(!title.isEmpty()) {
-		tabBar->setTabText(tabIndex(sender()), title);
+		tabBar->setTabText(tabIndex(sender()), title);		
+		#ifndef NAVEO_DONT_USE_WEBKIT_HISTORY
+		nApp()->getHistoryManager()->updateEntries(qobject_cast<QWebView *>(sender())->url(), title); // move this
+		#endif
 	}
 }
 
-void nWindow::urlEntered(QUrl url) {
+void nWindow::urlEntered(const QUrl &url) {
 	qobject_cast<nWebView *>(stack->currentWidget())->load(url);
 }
 

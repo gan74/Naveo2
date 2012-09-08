@@ -80,7 +80,7 @@ void nDownloadWidget::updateProgress(qint64 done, qint64 total) {
 }
 
 void nDownloadWidget::open() {
-	QDesktopServices::openUrl(QUrl(download->getName()));
+	QDesktopServices::openUrl(QUrl(download->getName())); // ask for root ?
 }
 
 void nDownloadWidget::retry() {

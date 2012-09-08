@@ -88,7 +88,7 @@ void nUrlLineEdit::loadFinished(bool ok) {
 void nUrlLineEdit::fade() {
 	if(progress < 0) {
 		progress += 12;
-		QTimer::singleShot(30, this, SLOT(fade()));
+		QTimer::singleShot(40, this, SLOT(fade()));
 		repaint();
 	}
 }

@@ -17,102 +17,113 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <nHistoryManager.h>
 #include <nNaveoApplication.h>
 
-nHistoryManager::nHistoryManager(QWidget *parent) : QWidget(parent) {
-	setWindowTitle("Naveo history");
-
-	QVBoxLayout *layout = new QVBoxLayout(this);
-	tree = new QTreeWidget(this);
-
-	QStringList headers;
-	headers<<tr("Title")<<tr("Url")<<tr("Date");
-	tree->setHeaderLabels(headers);
-
-	tree->setColumnWidth(0, 150);
-	tree->setColumnWidth(1, 200);
-	tree->setColumnWidth(2, 150);
-	tree->setColumnCount(3);
-
-	layout->addWidget(tree);
-	resize(550, 400);
-
-	load();
+nHistoryManager::nHistoryManager(QObject *parent) : QWebHistoryInterface(parent) {
+	cache.setMaxCost(256);
+	loaded = false;
 }
 
-void nHistoryManager::load() {
-	QFile file(nSettings(nSettingsManager::HistoryFilePath).toString());
-	if(!file.open(QIODevice::ReadOnly)) {
-		nApp()->error("Unable to open " + file.fileName());
-		refresh();
-		return;
-	}
-
-	QDataStream stream(&file);
-	while(!stream.atEnd()) {
-		nHistoryEntry entry;
-		stream>>entry;
-		history.append(entry);
-	}
-
-	file.close();
-	refresh();
-}
-
-void nHistoryManager::save() const {
-	QFile file(nSettings(nSettingsManager::HistoryFilePath).toString());
-	if(!file.open(QIODevice::WriteOnly)) {
-		nApp()->error("Unable to open " + file.fileName());
-		return;
-	}
-
-	QDataStream stream(&file);
-	foreach(nHistoryEntry entry, history) {
-		stream<<entry;
-	}
-
-	file.close();
-}
-
-QTreeWidgetItem *nHistoryManager::createItem(nHistoryEntry &entry){
-	QStringList l;
-	l<<entry.getTitle()<<entry.getUrl().toString()<<entry.getDate().toString(tr("MM/dd/yyyy \'at\' hh:mm:ss"));
-	QTreeWidgetItem *item = new QTreeWidgetItem(l);
-	item->setIcon(0, nApp()->getWebSettings()->iconForUrl(entry.getUrl()));
-	if(item->icon(0).isNull()) {
-		item->setIcon(0, nApp()->getTheme()->getIcon(nTheme::DefaultPage));
-	}
-	return item;
-}
-
-void nHistoryManager::addEntry(QWebHistory *h) {
-	nHistoryEntry entry(h->currentItem(), h);
-	history.append(entry);
-	tree->invisibleRootItem()->child(0)->insertChild(0, createItem(entry));
-
+nHistoryManager::~nHistoryManager() {
 	save();
 }
 
-void nHistoryManager::refresh() {
-	bool expand[] = {false, false, false};
-	if(tree->invisibleRootItem()->childCount()) {  // may store root items instead ?
-		expand[0] = tree->invisibleRootItem()->child(0)->isExpanded();
-		expand[1] = tree->invisibleRootItem()->child(1)->isExpanded();
-		expand[2] = tree->invisibleRootItem()->child(2)->isExpanded();
-		tree->clear();
+void nHistoryManager::addHistoryEntry(const QString &url) {
+	if(nApp()->getWebSettings()->testAttribute(QWebSettings::PrivateBrowsingEnabled)) {
+		return;
 	}
-	QTreeWidgetItem *today = new QTreeWidgetItem(tree, QStringList(tr("Today")));
-	QTreeWidgetItem *lastWeek = new QTreeWidgetItem(tree, QStringList(tr("Last week")));
-	QTreeWidgetItem *older = new QTreeWidgetItem(tree, QStringList(tr("Older")));
-	today->setIcon(0, nApp()->getTheme()->getStyleIcon(QStyle::SP_DirIcon));
-	lastWeek->setIcon(0, nApp()->getTheme()->getStyleIcon(QStyle::SP_DirIcon));
-	older->setIcon(0, nApp()->getTheme()->getStyleIcon(QStyle::SP_DirIcon));
-	today->setExpanded(expand[0]);
-	lastWeek->setExpanded(expand[1]);
-	older->setExpanded(expand[2]);
+	#ifndef NAVEO_DONT_USE_WEBKIT_HISTORY
+	nHistoryEntry *entry = new nHistoryEntry(QUrl(url), QDateTime(QDate::currentDate(), QTime::currentTime()));
+	history.append(entry);
+	cache.insert(url, new nHistoryEntryRef(entry));
+	emit entryAdded(entry);
+	if(history.size() % maxDataSize == 0) {
+		save();
+	}
+	#else
+	cache.insert(url, new nHistoryEntryRef());
+	Q_UNUSED(url);
+	#endif
+}
 
-	foreach(nHistoryEntry entry, history) {
-		QTreeWidgetItem *parent = entry.getDate().date() == QDate::currentDate() ? today : (QDate::currentDate().daysTo(entry.getDate().date()) > -7 ? lastWeek : older);
-		parent->insertChild(0, createItem(entry));
+#ifndef NAVEO_DONT_USE_WEBKIT_HISTORY
+void nHistoryManager::updateEntries(const QUrl &url, const QString &title) {
+	nHistoryEntryRef *e = cache.object(url.toString());
+	if(e) {
+		e->entry->setTitle(title);
+		emit entryUpdated(e->entry);
+	}
+}
+#else
+void nHistoryManager::addEntry(const QUrl &url, const QString &title) {
+	if(nApp()->getWebSettings()->testAttribute(QWebSettings::PrivateBrowsingEnabled)) {
+		return;
+	}
+	nHistoryEntry *entry = new nHistoryEntry(url, QDateTime(QDate::currentDate(), QTime::currentTime()), title);
+	history.append(entry);
+	emit entryAdded(entry);
+	if(history.size() % maxDataSize == 0) {
+		save();
+	}
+}
+
+#endif
+
+bool nHistoryManager::historyContains(const QString &url) const {
+	return cache.contains(url);
+}
+
+
+bool nHistoryManager::save() {
+	QFile file(nSettings(nSettingsManager::HistoryFilePath).toString());
+	if(!file.open(loaded ? QIODevice::WriteOnly : QIODevice::Append)) { //overwrite if loaded, else append
+		nApp()->error("unable to open " + file.fileName());
+		return false;
 	}
 
-	nApp()->debug("history widget refreshed");
+	QDataStream stream(&file); // encrypt !
+	foreach(nHistoryEntry *entry, history) {
+		stream<<*entry;
+	}
+
+	file.close();
+	clearData();
+	return true;
+}
+
+bool nHistoryManager::load() {
+	QFile file(nSettings(nSettingsManager::HistoryFilePath).toString());
+	if(!file.open(QIODevice::ReadOnly)) {
+		nApp()->error("unable to open " + file.fileName());
+		return false; // this->loaded stay the same
+	}
+
+	QDataStream stream(&file);
+	QList<nHistoryEntry *> lst;
+	while(!stream.atEnd()) {
+		nHistoryEntry *entry = new nHistoryEntry();
+		stream>>*entry;
+		lst.append(entry); // check for expiration
+		emit entryAdded(entry);
+		cache.insert(entry->getUrl().toString(), new nHistoryEntryRef(entry));
+	}
+	lst.append(history);
+	history = lst;
+
+	file.close();
+	return loaded = true;
+}
+
+void nHistoryManager::clear() {
+	if(!QFile::remove(nSettings(nSettingsManager::HistoryFilePath).toString())) {
+		nApp()->debug("Nothing to clear");
+	}
+	clearData();
+}
+
+void nHistoryManager::clearData() {
+	loaded = false;
+	foreach(nHistoryEntry *entry, history) {
+		delete entry;
+	}
+	history.clear();
+	cache.clear();
 }

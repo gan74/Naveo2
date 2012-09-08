@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class nWebPage : public QWebPage
 {
 	public:
-		nWebPage();
+		nWebPage(QObject *parent = 0);
 
 };
 

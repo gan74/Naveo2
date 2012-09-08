@@ -17,31 +17,57 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef NHISTORYMANAGER_H
 #define NHISTORYMANAGER_H
 
-#include <QtGui>
+#include <QtNetwork>
+#include <QWebHistoryInterface>
 #include <nHistoryEntry.h>
 
-class nHistoryManager : public QWidget
+class nHistoryManager : public QWebHistoryInterface
 {
     Q_OBJECT
+
+	class nHistoryEntryRef
+	{
+		public:
+			nHistoryEntryRef(nHistoryEntry *e = 0) {
+				entry = e;
+			}
+
+			nHistoryEntry *entry;
+	};
+
 	public:
-		explicit nHistoryManager(QWidget *parent = 0);
+		explicit nHistoryManager(QObject *parent = 0);
+		~nHistoryManager();
+
+		void addHistoryEntry(const QString &url);
+		bool historyContains(const QString &url) const;
+
+		#ifndef NAVEO_DONT_USE_WEBKIT_HISTORY
+		void updateEntries(const QUrl &url, const QString &title);
+		#else
+		void addEntry(const QUrl &url, const QString &title);
+		#endif
 
 	signals:
+		void entryAdded(nHistoryEntry *entry);
+		#ifndef NAVEO_DONT_USE_WEBKIT_HISTORY
+		void entryUpdated(nHistoryEntry *entry);
+		#endif
 
 	public slots:
-		void refresh();
-		void addEntry(QWebHistory *h);
+		bool save();
+		bool load();
 
-		void save() const;
-		void load();
-
+		void clear();
 
 	protected:
-		QTreeWidgetItem *createItem(nHistoryEntry &entry);
+		void clearData();
 
 	private:
-		QTreeWidget *tree;
-		QList<nHistoryEntry> history;
+		static const int maxDataSize = 4; // 16 ?
+		bool loaded;
+		QList<nHistoryEntry *> history;
+		QCache<QString, nHistoryEntryRef> cache; // OOoooh, This is bad ! create custom cache class
 
 
 };

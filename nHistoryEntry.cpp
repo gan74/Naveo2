@@ -17,23 +17,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <nHistoryEntry.h>
 #include <nNaveoApplication.h>
 
-
 nHistoryEntry::nHistoryEntry() {
-	parent = 0;
+	date = QDateTime(QDate::currentDate(), QTime::currentTime());
+	#ifndef NAVEO_DONT_USE_WEBKIT_HISTORY
+	item = 0;
+	#endif
 }
 
-nHistoryEntry::nHistoryEntry(QString &t, QUrl &u, QDateTime &d, QWebHistory *p) {
+nHistoryEntry::nHistoryEntry(const QUrl &u, const QDateTime &d, QString t) {
 	title = t;
 	url = u;
 	date = d;
-	parent = p;
+	#ifndef NAVEO_DONT_USE_WEBKIT_HISTORY
+	item = 0;
+	#endif
 }
 
-nHistoryEntry::nHistoryEntry(QWebHistoryItem item, QWebHistory *p) {
-	title = item.title();
-	url = item.url();
-	date = item.lastVisited().toTime_t() ? item.lastVisited() : QDateTime(QDate::currentDate(), QTime::currentTime());
-	parent = p;
+nHistoryEntry::~nHistoryEntry() {
 }
 
 QDateTime nHistoryEntry::getDate() const {
@@ -41,23 +41,37 @@ QDateTime nHistoryEntry::getDate() const {
 }
 
 QString nHistoryEntry::getTitle() const {
-	return title;
+	return title.isEmpty() ? url.host() : title;
 }
 
 QUrl nHistoryEntry::getUrl() const {
 	return url;
 }
 
-void nHistoryEntry::setDate(QDateTime d) {
+#ifndef NAVEO_DONT_USE_WEBKIT_HISTORY
+QTreeWidgetItem *nHistoryEntry::getTreeWidgetItem() {
+	return item;
+}
+
+void nHistoryEntry::setTreeWidgetItem(QTreeWidgetItem *i) {
+	item = i;
+}
+#endif
+
+void nHistoryEntry::setDate(const QDateTime &d) {
 	date = d;
 }
 
-void nHistoryEntry::setTitle(QString t) {
+void nHistoryEntry::setTitle(const QString &t) {
 	title = t;
 }
 
-void nHistoryEntry::setUrl(QUrl u) {
+void nHistoryEntry::setUrl(const QUrl &u) {
 	url = u;
+}
+
+bool nHistoryEntry::match(const QString &s) const {
+	return title.contains(s) || (s.size() > 3 && url.toString().contains(s));
 }
 
 QDataStream &operator<<(QDataStream &stream, const nHistoryEntry &entry) {

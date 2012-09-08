@@ -21,27 +21,45 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtNetwork>
 #include <QWebHistory>
 
+/* Qt provide with QWebHistoryInterface a way to get history,
+ * HOWEVER you need to implement your own way to get the page title.
+ * If I have to call the history manager directly, i wish i have
+ * to call it only once per entry.
+ */
+#define NAVEO_DONT_USE_WEBKIT_HISTORY
+
 class nHistoryEntry
 {
+
 	public:
 		nHistoryEntry();
-		nHistoryEntry(QString &t, QUrl &u, QDateTime &d, QWebHistory *p = 0);
-		nHistoryEntry(QWebHistoryItem item, QWebHistory *p);
+		nHistoryEntry(const QUrl &u, const QDateTime &d, QString t = QString());
+		~nHistoryEntry();
 
 
 		QDateTime getDate() const;
 		QString getTitle() const;
 		QUrl getUrl() const;
 
-		void setDate(QDateTime d);
-		void setTitle(QString t);
-		void setUrl(QUrl u);
+		void setDate(const QDateTime &d);
+		void setTitle(const QString &t);
+		void setUrl(const QUrl &u);
+
+		#ifndef NAVEO_DONT_USE_WEBKIT_HISTORY
+		QTreeWidgetItem *getTreeWidgetItem();
+		void setTreeWidgetItem(QTreeWidgetItem *i);
+		#endif
+
+		bool match(const QString &s) const;
 
 	private:
+		#ifndef NAVEO_DONT_USE_WEBKIT_HISTORY
+		QTreeWidgetItem *item;
+		#endif
+
 		QString title;
 		QUrl url;
 		QDateTime date;
-		QWebHistory *parent;
 };
 
 QDataStream& operator<<(QDataStream& stream, const nHistoryEntry &entry);

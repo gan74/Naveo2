@@ -28,6 +28,7 @@ nWebView::nWebView(QWidget *parent) : QWebView(parent) {
 
 	connect(this, SIGNAL(loadProgress(int)), this, SLOT(updateProgress(int)));
 	connect(page(), SIGNAL(unsupportedContent(QNetworkReply*)), this, SLOT(unsupportedContent(QNetworkReply*)));
+	connect(this, SIGNAL(loadFinished(bool)), this, SLOT(finished(bool)));
 
 	load(QUrl("http://www.google.com/"));
 }
@@ -38,8 +39,13 @@ int nWebView::getProgress() const {
 
 void nWebView::updateProgress(int pro) {
 	progress = pro;
-	if(pro == 100) {
-		nApp()->getHistoryManager()->addEntry(history());
+}
+
+void nWebView::finished(bool ok) {
+	if(ok) {
+		#ifdef NAVEO_DONT_USE_WEBKIT_HISTORY
+		nApp()->getHistoryManager()->addEntry(url(), title());
+		#endif
 	}
 }
 

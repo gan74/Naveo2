@@ -33,6 +33,7 @@ class nWebView : public QWebView
 		void viewCreated(nWebView *view);
 
 	private slots:
+		void finished(bool ok);
 		void updateProgress(int pro);
 		void unsupportedContent(QNetworkReply *reply);
 

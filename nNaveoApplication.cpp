@@ -29,6 +29,7 @@ nNaveoApplication::nNaveoApplication(int argc, char *argv[]) : QApplication(argc
 	downloadManager = new nDownloadManager();
 	accessManager = new QNetworkAccessManager(this);
 	historyManager = new nHistoryManager();
+	QWebHistoryInterface::setDefaultInterface(historyManager);
 
 
 	setWindowIcon(QIcon(":/icon.png"));
@@ -41,11 +42,18 @@ nNaveoApplication *nNaveoApplication::app() {
 }
 
 void nNaveoApplication::debug(QString msg) {
-	console->message(msg);
+	if(!msg.isEmpty()) {
+		msg = msg.left(1).toUpper() + msg.right(msg.size() - 1);
+		console->message(msg);
+	}
+
 }
 
 void nNaveoApplication::error(QString err) {
-	debug("Error : " + err);
+	if(!err.isEmpty()) {
+		err = err.left(1).toLower() + err.right(err.size() - 1);
+		debug("Error : " + err);
+	}
 }
 
 int nNaveoApplication::exec() {
@@ -55,7 +63,7 @@ int nNaveoApplication::exec() {
 		console->show();
 	}
 	if(args.contains("-hmanager")) {
-		historyManager->show();
+		(new nHistoryWidget(historyManager))->show(); // the beauty of Qt : alloc and forget
 	}
 	setActiveWindow(win);
 	return QApplication::exec();
@@ -69,9 +77,9 @@ void nNaveoApplication::close() {
 void nNaveoApplication::settingsChanged() {
 	QTranslator translator;
 	if(!translator.load(QString(getPath() + "/locale/qt_") +  nSettings(nSettingsManager::Locale).toLocale().name())) {
-		error("Unable to load translation \"" + settings->getSettings(nSettingsManager::Locale).toLocale().name() + "\"");
+		error("unable to load translation \"" + settings->getSettings(nSettingsManager::Locale).toLocale().name() + "\"");
 	} else {
-		debug("translation loaded");
+		debug("Translation loaded");
 		installTranslator(&translator);
 	}
 }
@@ -105,11 +113,12 @@ void nNaveoApplication::initWebSettings() {
 	webSettings->setWebGraphic(QWebSettings::DefaultFrameIconGraphic, theme->getPixmap(nTheme::DefaultPage));
 }
 
-QLibrary *nNaveoApplication::getLibrary(QString name) {
+QLibrary *nNaveoApplication::getLibrary(const QString &name) {
 	QLibrary *l = libs[name];
 	if(!l) {
 		l = new QLibrary(name);
 		libs[name] = l;
+		debug(name + " loaded");
 	}
 	return l;
 }

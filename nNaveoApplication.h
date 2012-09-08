@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <nDownloadManager.h>
 #include <nTheme.h>
 #include <nSettingsManager.h>
-#include <nHistoryManager.h>
+#include <nHistoryWidget.h>
 
 #define nSettings(s) nApp()->getSettingsManager()->getSettings(s)
 
@@ -37,7 +37,7 @@ class nNaveoApplication : public QApplication
 	public:
 		nNaveoApplication(int argc, char *argv[]);
 
-		QLibrary *getLibrary(QString name);
+		QLibrary *getLibrary(const QString &name);
 
 		nTheme *getTheme() const;
 		nSearchEngine *getSearchEngine() const;

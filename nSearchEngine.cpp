@@ -20,11 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 nGoogleSearchEngine::nGoogleSearchEngine() {
 }
 
-QString nGoogleSearchEngine::process(QString s) {
+QString nGoogleSearchEngine::process(const QString &s) {
 	return processPrivate(s);
 }
 
-QString nGoogleSearchEngine::processPrivate(QString s) const {
+QString nGoogleSearchEngine::processPrivate(const QString &s) const {
 	QString base = QString("http://www.google.com/search?hl=") + nSettings(nSettingsManager::Locale).toLocale().name().split("_").last().toLower() + QString("&q=");
 	return base + s.split(" ").join("+");
 }

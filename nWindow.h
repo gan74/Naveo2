@@ -40,10 +40,10 @@ class nWindow : public QWidget
 	private slots:
 		void tabMoved(int from, int to);
 		void currentTabChanged(int index);
-		void tabTitleChanged(QString title);
+		void tabTitleChanged(const QString &title);
 		void loadProgress(int pro);
 
-		void urlEntered(QUrl url);
+		void urlEntered(const QUrl &url);
 
 		void changeSettings();
 

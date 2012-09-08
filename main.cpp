@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 int main(int argc, char *argv[])
 {
 	nNaveoApplication n(argc, argv);
-	nWindow *win = new nWindow;
+	nWindow *win = new nWindow();
 	win->show();
 	return n.exec();
 }
