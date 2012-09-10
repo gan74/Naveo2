@@ -69,7 +69,7 @@ void nNaveoApplication::checkInstance() {
 				socket->flush();
 				socket->waitForBytesWritten();
 			}
-			throw nNaveoAlreadyRunningException();
+            throw nNaveoAlreadyRunningException();
 		} else {
 			error("unable to get shared memory access : " + sharedMemory->errorString());
 		}
@@ -127,6 +127,11 @@ void nNaveoApplication::parseArguments(const QStringList &args) {
 			win->addTab()->load(QUrl(arg));
 			win->show();
 		}
+        else{ //Default case
+            nWindow *win = new nWindow();
+            win->addTab()->load(QUrl("http://www.google.be"));
+            win->show();
+        }
 	}
 }
 
