@@ -40,7 +40,7 @@ nNaveoApplication::nNaveoApplication(int argc, char *argv[]) : QApplication(argc
 	setWindowIcon(QIcon(":/icon.png"));
 	connect(settings, SIGNAL(settingsChanged()), this, SIGNAL(settingsChanged()));
 	connect(this, SIGNAL(settingsChanged()), this, SLOT(updateSettings()));
-	updateSettings();
+    updateSettings();
 }
 
 nNaveoApplication::~nNaveoApplication() {
@@ -69,7 +69,7 @@ void nNaveoApplication::checkInstance() {
 				socket->flush();
 				socket->waitForBytesWritten();
 			}
-            throw nNaveoAlreadyRunningException();
+            //throw nNaveoAlreadyRunningException();
 		} else {
 			error("unable to get shared memory access : " + sharedMemory->errorString());
 		}
@@ -167,16 +167,17 @@ void nNaveoApplication::close() {
 }
 
 void nNaveoApplication::updateSettings() {
-	loadTranslator();
+
 }
 
 void nNaveoApplication::loadTranslator() {
 	QTranslator translator;
-	if(!translator.load(QString(getPath() + "/locale/qt_") +  nSettings(nSettingsManager::Locale).toLocale().name())) {
-		error("unable to load translation \"" + settings->getSettings(nSettingsManager::Locale).toLocale().name() + "\"");
-	} else {
+    QString locale = QLocale::system().name().section('_', 0, 0);
+    if(!translator.load(QString("naveo2_") + locale)) {
+        error("unable to load translation \"" + settings->getSettings(nSettingsManager::Locale).toLocale().name() + "\"");
+    } else {
 		debug("Translation loaded");
-		installTranslator(&translator);
+        this->installTranslator(&translator);
 	}
 }
 

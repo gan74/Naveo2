@@ -74,7 +74,7 @@ class nNaveoApplication : public QApplication
 		void close();
 		void showHistory();
 		void showSettingsPanel();
-		void updateSettings();
+        void updateSettings();
 		void parseArguments(const QStringList &args);
 
 	private slots:

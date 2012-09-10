@@ -53,3 +53,7 @@ HEADERS  += nWindow.h \
     nHistoryEntry.h \
     nHistoryWidget.h \
     nSettingsWidget.h
+
+#Translations
+CODECFORTR = UTF-8
+TRANSLATIONS = naveo2_fr.ts
