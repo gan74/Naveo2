@@ -49,10 +49,12 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 			}
 		#endif
 	}
+	nApp()->registerWindow(this);
 	current = 0;
 
 	setWindowTitle("Naveo2");
 	setMinimumSize(300, 200);
+	setAttribute(Qt::WA_DeleteOnClose);
 	setWindowIcon(QIcon(":/icon.png")); // change this ?
 
 	connect(nApp()->getSettingsManager(), SIGNAL(settingsChanged()), this, SLOT(changeSettings()));
@@ -115,7 +117,7 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 }
 
 nWindow::~nWindow() {
-
+	nApp()->unregisterWindow(this);
 }
 
 nWebView *nWindow::addTab() {

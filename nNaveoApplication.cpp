@@ -24,7 +24,9 @@ nNaveoApplication::nNaveoApplication(int argc, char *argv[]) : QApplication(argc
 	checkInstance();
 
 	settings = new nSettingsManager(this);
+	translator = new QTranslator();
 	loadTranslator();
+
 
 	theme = new nTheme();
 
@@ -69,7 +71,7 @@ void nNaveoApplication::checkInstance() {
 				socket->flush();
 				socket->waitForBytesWritten();
 			}
-            //throw nNaveoAlreadyRunningException();
+			throw nNaveoAlreadyRunningException();
 		} else {
 			error("unable to get shared memory access : " + sharedMemory->errorString());
 		}
@@ -127,11 +129,6 @@ void nNaveoApplication::parseArguments(const QStringList &args) {
 			win->addTab()->load(QUrl(arg));
 			win->show();
 		}
-        else{ //Default case
-            nWindow *win = new nWindow();
-            win->addTab()->load(QUrl("http://www.google.be"));
-            win->show();
-        }
 	}
 }
 
@@ -161,23 +158,33 @@ int nNaveoApplication::exec() {
 	return QApplication::exec();
 }
 
+void nNaveoApplication::registerWindow(nWindow *w) {
+	wins.insert(w);
+}
+
+void nNaveoApplication::unregisterWindow(nWindow *w) {
+	wins.remove(w);
+	if(!wins.size()) {
+		exit(0);
+	}
+}
+
 
 void nNaveoApplication::close() {
 	settings->save();
 }
 
 void nNaveoApplication::updateSettings() {
-
+	loadTranslator();
 }
 
 void nNaveoApplication::loadTranslator() {
-	QTranslator translator;
-    QString locale = QLocale::system().name().section('_', 0, 0);
-    if(!translator.load(QString("naveo2_") + locale)) {
-        error("unable to load translation \"" + settings->getSettings(nSettingsManager::Locale).toLocale().name() + "\"");
-    } else {
+	QString locFile = "locale/naveo2_" + nSettings(nSettingsManager::Locale).toLocale().name().split("_").first();
+	if(translator->load(":/" + locFile) || translator->load(getPath() + locFile)) {
 		debug("Translation loaded");
-        this->installTranslator(&translator);
+		installTranslator(translator);
+	 } else {
+		error("unable to load translation \"" + locFile + "\"");
 	}
 }
 

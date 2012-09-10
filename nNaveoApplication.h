@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtWebKit>
 #include <QWebSettings>
 #include <QtGui>
+#include <nWindow.h>
 #include <nSearchEngine.h>
 #include <nDebugConsole.h>
 #include <nDownloadManager.h>
@@ -77,6 +78,9 @@ class nNaveoApplication : public QApplication
         void updateSettings();
 		void parseArguments(const QStringList &args);
 
+		void registerWindow(nWindow *w);
+		void unregisterWindow(nWindow *w);
+
 	private slots:
 		void newLocalConnection();
 
@@ -88,6 +92,8 @@ class nNaveoApplication : public QApplication
 		QSharedMemory *sharedMemory;
 		QLocalServer *server;
 
+		QTranslator *translator;
+
 		nTheme *theme;
 		nSearchEngine *engine;
 		nDebugConsole *console;
@@ -97,6 +103,7 @@ class nNaveoApplication : public QApplication
 		nSettingsManager *settings;
 		nHistoryManager *historyManager;
 		QMap<QString, QLibrary *> libs;
+		QSet<nWindow *> wins;
 };
 
 #endif // NNAVEOAPPLICATION_H
