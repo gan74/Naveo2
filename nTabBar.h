@@ -25,7 +25,7 @@ class nTabBar : public QTabBar
     Q_OBJECT
 
 	public:
-		explicit nTabBar(QWidget *parent = 0);
+        explicit nTabBar(QWidget *menu, QWidget *parent);
 
 		int count() const;
 

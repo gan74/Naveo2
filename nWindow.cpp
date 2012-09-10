@@ -53,6 +53,7 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 
 	setWindowTitle("Naveo2");
 	setMinimumSize(300, 200);
+	setWindowIcon(QIcon(":/icon.png"));
 
 	connect(nApp()->getSettingsManager(), SIGNAL(settingsChanged()), this, SLOT(changeSettings()));
 
@@ -60,12 +61,18 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 	layout->setContentsMargins(0, 0, 0, 0);
 	layout->setSpacing(0);
 
-	tabBar = new nTabBar(this);
+    QPushButton *appMenu = new QPushButton(QIcon(":/icon.png"), "");
+    appMenu->setFixedSize(33, 35);
+    connect(appMenu, SIGNAL(clicked()), this, SLOT(showMenu()));
+
+    tabBar = new nTabBar(appMenu, this);
 	connect(tabBar, SIGNAL(tabMoved(int,int)), this, SLOT(tabMoved(int, int)));
 	connect(tabBar, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
 	connect(tabBar, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
 	connect(tabBar, SIGNAL(newTabRequested()), this, SLOT(addTab()));
 	layout->addWidget(tabBar);
+
+    createMenu();
 
 	toolBar = new QToolBar(this);
 	toolBar->setAutoFillBackground(true);
@@ -207,4 +214,16 @@ void nWindow::disconnectTab(nWebView *v) {
 	disconnect(v, SIGNAL(loadProgress(int)), urlEdit, SLOT(loadProgress(int)));
 	disconnect(v, SIGNAL(loadFinished(bool)), urlEdit, SLOT(loadFinished(bool)));
 	disconnect(v, SIGNAL(loadProgress(int)), this, SLOT(loadProgress(int)));
+}
+
+void nWindow::createMenu(){
+    globalMenu = new QMenu(this);
+    globalMenu->addAction(QIcon(":/theme/newTab.png"), tr("Nouvel onglet"), tabBar, SIGNAL(newTabRequested()), QKeySequence("Ctrl+T"));
+    nSettingsWidget *settingsWidget = new nSettingsWidget;
+    globalMenu->addAction(tr("Options"), settingsWidget, SLOT(createWidget()));
+    return;
+}
+
+void nWindow::showMenu(){
+    globalMenu->exec(mapToGlobal(QPoint(15, 20)));
 }

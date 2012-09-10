@@ -33,7 +33,8 @@ SOURCES += main.cpp\
     nWebPage.cpp \
     nHistoryManager.cpp \
     nHistoryEntry.cpp \
-    nHistoryWidget.cpp
+    nHistoryWidget.cpp \
+    nSettingsWidget.cpp
 
 HEADERS  += nWindow.h \
     nNaveoApplication.h \
@@ -50,4 +51,5 @@ HEADERS  += nWindow.h \
     nWebPage.h \
     nHistoryManager.h \
     nHistoryEntry.h \
-    nHistoryWidget.h
+    nHistoryWidget.h \
+    nSettingsWidget.h
