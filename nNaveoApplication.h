@@ -72,7 +72,7 @@ class nNaveoApplication : public QApplication
 		void settingsChanged();
 
 	public slots:
-		void close();
+		nWindow *addWindow();
 		void showHistory();
 		void showSettingsPanel();
         void updateSettings();
@@ -82,6 +82,7 @@ class nNaveoApplication : public QApplication
 		void unregisterWindow(nWindow *w);
 
 	private slots:
+		void close();
 		void newLocalConnection();
 
 	private:

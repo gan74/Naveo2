@@ -102,7 +102,11 @@ void nNaveoApplication::newLocalConnection() {
 			stream.readBytes(c, size);
 			args.append(QString::fromAscii(c, size));
 		}
+		int s = wins.size();
 		parseArguments(args);
+		if(wins.size() == s) {
+			addWindow();
+		}
 		socket->deleteLater();
 	}
 
@@ -149,10 +153,20 @@ void nNaveoApplication::error(QString err) {
 	}
 }
 
+nWindow *nNaveoApplication::addWindow() {
+	nWindow *w = new nWindow();
+	w->addTab();
+	w->show();
+	return w;
+}
+
 int nNaveoApplication::exec() {
 	QWidget *win = activeWindow();
 	QStringList args = arguments();
 	parseArguments(args);
+	if(wins.isEmpty()) {
+		win = addWindow();
+	}
 	setActiveWindow(win);
 	debug("Naveo started");
 	return QApplication::exec();
@@ -164,18 +178,17 @@ void nNaveoApplication::registerWindow(nWindow *w) {
 
 void nNaveoApplication::unregisterWindow(nWindow *w) {
 	wins.remove(w);
-	if(!wins.size()) {
-		exit(0);
+	if(wins.isEmpty()) {
+		quit();
 	}
-}
-
-
-void nNaveoApplication::close() {
-	settings->save();
 }
 
 void nNaveoApplication::updateSettings() {
 	loadTranslator();
+}
+
+void nNaveoApplication::close() {
+	settings->save();
 }
 
 void nNaveoApplication::loadTranslator() {
