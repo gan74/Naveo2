@@ -63,7 +63,6 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 
     QPushButton *appMenu = new QPushButton(QIcon(":/icon.png"), "");
     appMenu->setFixedSize(33, 35);
-    createMenu();
     connect(appMenu, SIGNAL(clicked()), this, SLOT(showMenu()));
 
     tabBar = new nTabBar(appMenu, this);
@@ -72,6 +71,8 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 	connect(tabBar, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
 	connect(tabBar, SIGNAL(newTabRequested()), this, SLOT(addTab()));
 	layout->addWidget(tabBar);
+
+    createMenu();
 
 	toolBar = new QToolBar(this);
 	toolBar->setAutoFillBackground(true);
@@ -216,7 +217,9 @@ void nWindow::disconnectTab(nWebView *v) {
 
 void nWindow::createMenu(){
     globalMenu = new QMenu(this);
-    globalMenu->addAction("test");
+    globalMenu->addAction(QIcon(":/theme/newTab.png"), tr("Nouvel onglet"), tabBar, SIGNAL(newTabRequested()), QKeySequence("Ctrl+T"));
+    nSettingsWidget *settingsWidget = new nSettingsWidget;
+    globalMenu->addAction(tr("Options"), settingsWidget, SLOT(createWidget()));
     return;
 }
 

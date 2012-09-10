@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <nTabBar.h>
 #include <nWebView.h>
 #include <nUrlLineEdit.h>
+#include <nSettingsWidget.h>
 
 class nWindow : public QWidget
 {
