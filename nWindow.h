@@ -47,13 +47,16 @@ class nWindow : public QWidget
 
 		void changeSettings();
 
+        void showMenu();
+
 	private:
 		int tabIndex(QObject *o) {
 			return tabIndexes.indexOf(stack->indexOf(qobject_cast<nWebView *>(o)));
 		}
 
 		void disconnectTab(nWebView *v);
-		void connectTab(nWebView *v);
+        void connectTab(nWebView *v);
+        void createMenu();
 
 		nTabBar *tabBar;
 		QToolBar *toolBar;
@@ -66,6 +69,7 @@ class nWindow : public QWidget
 		QAction *forwardAction;
 		QAction *stopAction;
 		QAction *reloadAction;
+        QMenu *globalMenu;
 };
 
 #endif // NWINDOW_H

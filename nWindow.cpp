@@ -61,7 +61,12 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 	layout->setContentsMargins(0, 0, 0, 0);
 	layout->setSpacing(0);
 
-	tabBar = new nTabBar(this);
+    QPushButton *appMenu = new QPushButton(QIcon(":/icon.png"), "");
+    appMenu->setFixedSize(33, 35);
+    createMenu();
+    connect(appMenu, SIGNAL(clicked()), this, SLOT(showMenu()));
+
+    tabBar = new nTabBar(appMenu, this);
 	connect(tabBar, SIGNAL(tabMoved(int,int)), this, SLOT(tabMoved(int, int)));
 	connect(tabBar, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
 	connect(tabBar, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
@@ -207,4 +212,14 @@ void nWindow::disconnectTab(nWebView *v) {
 	disconnect(v, SIGNAL(loadProgress(int)), urlEdit, SLOT(loadProgress(int)));
 	disconnect(v, SIGNAL(loadFinished(bool)), urlEdit, SLOT(loadFinished(bool)));
 	disconnect(v, SIGNAL(loadProgress(int)), this, SLOT(loadProgress(int)));
+}
+
+void nWindow::createMenu(){
+    globalMenu = new QMenu(this);
+    globalMenu->addAction("test");
+    return;
+}
+
+void nWindow::showMenu(){
+    globalMenu->exec(mapToGlobal(QPoint(15, 20)));
 }
