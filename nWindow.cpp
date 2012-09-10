@@ -89,7 +89,7 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 	stack->setAutoFillBackground(true);
 	layout->addWidget(stack);
 
-	addTab();
+	//addTab();
 
 	nApp()->debug("Window created");
 }
@@ -98,11 +98,11 @@ nWindow::~nWindow() {
 
 }
 
-void nWindow::addTab() {
-	addTab(new nWebView());
+nWebView *nWindow::addTab() {
+	return addTab(new nWebView());
 }
 
-void nWindow::addTab(nWebView *view) {
+nWebView *nWindow::addTab(nWebView *view) {
 	connect(view, SIGNAL(titleChanged(QString)), this, SLOT(tabTitleChanged(QString)));
 	connect(view, SIGNAL(viewCreated(nWebView*)), this, SLOT(addTab(nWebView*)));
 	stack->addWidget(view);
@@ -112,6 +112,7 @@ void nWindow::addTab(nWebView *view) {
 	if(tabBar->count() == 1) {
 		connectTab(view);
 	}
+	return view;
 }
 
 void nWindow::closeTab(int index) {
@@ -121,9 +122,9 @@ void nWindow::closeTab(int index) {
 	}
 	tabBar->removeTab(index);
 	nWebView *view = qobject_cast<nWebView *>(stack->widget(tabIndexes[index]));
-	view->deleteLater();
 	stack->removeWidget(view);
 	tabIndexes.removeAt(index);
+	view->deleteLater();
 	for(QList<int>::iterator it = tabIndexes.begin(); it != tabIndexes.end(); it++) {
 		if(*it > index) {
 			(*it)--;

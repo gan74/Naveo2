@@ -42,6 +42,8 @@ class nHistoryManager : public QWebHistoryInterface
 		void addHistoryEntry(const QString &url);
 		bool historyContains(const QString &url) const;
 
+		QList<nHistoryEntry *> getEntries(); // may need to load entries from file : can be slow
+
 		#ifndef NAVEO_DONT_USE_WEBKIT_HISTORY
 		void updateEntries(const QUrl &url, const QString &title);
 		#else

@@ -30,12 +30,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define nSettings(s) nApp()->getSettingsManager()->getSettings(s)
 
+class nNaveoAlreadyRunningException : public std::exception
+{
+	public:
+		nNaveoAlreadyRunningException() : std::exception() {}
+
+		const char* what() const throw() {
+			return "Naveo already running";
+		}
+};
+
 class nNaveoApplication : public QApplication
 {
 	Q_OBJECT
 
 	public:
+
 		nNaveoApplication(int argc, char *argv[]);
+		~nNaveoApplication();
 
 		QLibrary *getLibrary(const QString &name);
 
@@ -60,9 +72,18 @@ class nNaveoApplication : public QApplication
 	public slots:
 		void close();
 		void settingsChanged();
+		void parseArguments(const QStringList &args);
+
+	private slots:
+		void newLocalConnection();
 
 	private:
+		void checkInstance();
 		void initWebSettings();
+		void loadTranslator();
+
+		QSharedMemory *sharedMemory;
+		QLocalServer *server;
 
 		nTheme *theme;
 		nSearchEngine *engine;

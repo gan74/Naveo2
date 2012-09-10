@@ -44,6 +44,13 @@ void nHistoryManager::addHistoryEntry(const QString &url) {
 	#endif
 }
 
+QList<nHistoryEntry *> nHistoryManager::getEntries() {
+	if(!loaded) {
+		load();
+	}
+	return history;
+}
+
 #ifndef NAVEO_DONT_USE_WEBKIT_HISTORY
 void nHistoryManager::updateEntries(const QUrl &url, const QString &title) {
 	nHistoryEntryRef *e = cache.object(url.toString());

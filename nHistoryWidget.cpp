@@ -61,12 +61,16 @@ nHistoryWidget::nHistoryWidget(nHistoryManager *man, QWidget *parent) : QWidget(
 	tree->setColumnWidth(2, 150);
 	resize(550, 400);
 
+	foreach(nHistoryEntry *entry, manager->getEntries()) {
+		addEntry(entry);
+	}
+
 	connect(this, SIGNAL(destroyed()), manager, SLOT(save()));
 	connect(manager, SIGNAL(entryAdded(nHistoryEntry*)), this, SLOT(addEntry(nHistoryEntry*)));
 	#ifndef NAVEO_DONT_USE_WEBKIT_HISTORY
 	connect(manager, SIGNAL(entryUpdated(nHistoryEntry*)), this, SLOT(updateEntry(nHistoryEntry*)));
 	#endif
-	manager->load();
+
 }
 
 void nHistoryWidget::clear() {
@@ -79,7 +83,8 @@ void nHistoryWidget::clear() {
 }
 
 void nHistoryWidget::search(QString text) {
-
+	#warning search not implemented yet
+	Q_UNUSED(text);
 }
 
 void nHistoryWidget::addEntry(nHistoryEntry *entry) {

@@ -32,8 +32,8 @@ class nWindow : public QWidget
 		~nWindow();
 
 	public slots:
-		void addTab();
-		void addTab(nWebView *view);
+		nWebView *addTab();
+		nWebView *addTab(nWebView *view);
 
 		void closeTab(int index);
 

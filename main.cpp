@@ -20,8 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 int main(int argc, char *argv[])
 {
-	nNaveoApplication n(argc, argv);
-	nWindow *win = new nWindow();
-	win->show();
-	return n.exec();
+	try {
+		nNaveoApplication *n = new nNaveoApplication(argc, argv);
+		return n->exec();
+	} catch(nNaveoAlreadyRunningException e) {}
+	return 0;
 }
