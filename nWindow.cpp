@@ -53,7 +53,7 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 
 	setWindowTitle("Naveo2");
 	setMinimumSize(300, 200);
-	setWindowIcon(QIcon(":/icon.png"));
+	setWindowIcon(QIcon(":/icon.png")); // change this ?
 
 	connect(nApp()->getSettingsManager(), SIGNAL(settingsChanged()), this, SLOT(changeSettings()));
 
@@ -61,27 +61,40 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 	layout->setContentsMargins(0, 0, 0, 0);
 	layout->setSpacing(0);
 
-    QPushButton *appMenu = new QPushButton(QIcon(":/icon.png"), "");
-    appMenu->setFixedSize(33, 35);
-    connect(appMenu, SIGNAL(clicked()), this, SLOT(showMenu()));
-
-    tabBar = new nTabBar(appMenu, this);
+	tabBar = new nTabBar(this);
 	connect(tabBar, SIGNAL(tabMoved(int,int)), this, SLOT(tabMoved(int, int)));
 	connect(tabBar, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
 	connect(tabBar, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
 	connect(tabBar, SIGNAL(newTabRequested()), this, SLOT(addTab()));
-	layout->addWidget(tabBar);
-
-    createMenu();
-
-	toolBar = new QToolBar(this);
-	toolBar->setAutoFillBackground(true);
-	layout->addWidget(toolBar);
 
 	backAction = new QAction(nApp()->getTheme()->getIcon(nTheme::Back), tr("Back"), this);
 	forwardAction = new QAction(nApp()->getTheme()->getIcon(nTheme::Forward), tr("Forward"), this);
 	reloadAction = new QAction(nApp()->getTheme()->getIcon(nTheme::Reload), tr("Reload"), this);
 	stopAction = new QAction(nApp()->getTheme()->getIcon(nTheme::Stop), tr("Stop"), this);
+
+	mainMenu = new QMenu(this);
+	mainMenu->addAction(backAction);
+	mainMenu->addAction(forwardAction);
+	mainMenu->addAction(reloadAction);
+	mainMenu->addAction(stopAction);
+	mainMenu->addSeparator();
+	mainMenu->addAction(tr("Preferences"), nApp(), SLOT(showSettingsPanel()));
+
+	menuButton = new QPushButton(this);
+	menuButton->setFixedSize(40, 28);
+	menuButton->move(-3, -3);
+	menuButton->setStyleSheet("QPushButton{ image: url('" + nApp()->getTheme()->getThemeDir() + "menu.png'); border: none; }");
+	connect(menuButton, SIGNAL(clicked()), this, SLOT(showMenu()));
+
+	QHBoxLayout *tabBarLayout = new QHBoxLayout();
+	tabBarLayout->addSpacing(34);
+	tabBarLayout->addWidget(tabBar);
+	layout->addLayout(tabBarLayout);
+
+	toolBar = new QToolBar(this);
+	toolBar->setAutoFillBackground(true);
+	layout->addWidget(toolBar);
+
 
 	toolBar->addAction(backAction);
 	toolBar->addAction(forwardAction);
@@ -169,6 +182,15 @@ void nWindow::changeSettings() {
 	reloadAction->setEnabled(true);
 	stopAction->setVisible(true);
 	reloadAction->setVisible(true);
+
+	// icons & themes
+	stopAction->setIcon(nApp()->getTheme()->getIcon(nTheme::Stop));
+	reloadAction->setIcon(nApp()->getTheme()->getIcon(nTheme::Reload));
+	backAction->setIcon(nApp()->getTheme()->getIcon(nTheme::Back));
+	forwardAction->setIcon(nApp()->getTheme()->getIcon(nTheme::Forward));
+	menuButton->setIcon(nApp()->getTheme()->getIcon(nTheme::MainMenu));
+	menuButton->setStyleSheet("QPushButton{ image: url('" + nApp()->getTheme()->getThemeDir() + "menu.png'); border: none; }");
+
 	connectTab(current);
 }
 
@@ -216,14 +238,6 @@ void nWindow::disconnectTab(nWebView *v) {
 	disconnect(v, SIGNAL(loadProgress(int)), this, SLOT(loadProgress(int)));
 }
 
-void nWindow::createMenu(){
-    globalMenu = new QMenu(this);
-    globalMenu->addAction(QIcon(":/theme/newTab.png"), tr("Nouvel onglet"), tabBar, SIGNAL(newTabRequested()), QKeySequence("Ctrl+T"));
-    nSettingsWidget *settingsWidget = new nSettingsWidget;
-    globalMenu->addAction(tr("Options"), settingsWidget, SLOT(createWidget()));
-    return;
-}
-
-void nWindow::showMenu(){
-    globalMenu->exec(mapToGlobal(QPoint(15, 20)));
+void nWindow::showMenu() const {
+	mainMenu->exec(mapToGlobal(QPoint(0, 24)));
 }

@@ -12,5 +12,6 @@
         <file>plugin.png</file>
         <file>theme/newTab.png</file>
         <file>theme/download.png</file>
+        <file>theme/menu.png</file>
     </qresource>
 </RCC>

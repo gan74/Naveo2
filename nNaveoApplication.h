@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <nDebugConsole.h>
 #include <nDownloadManager.h>
 #include <nTheme.h>
-#include <nSettingsManager.h>
+#include <nSettingsWidget.h>
 #include <nHistoryWidget.h>
 
 #define nSettings(s) nApp()->getSettingsManager()->getSettings(s)
@@ -68,10 +68,13 @@ class nNaveoApplication : public QApplication
 		int exec();
 
 	signals:
+		void settingsChanged();
 
 	public slots:
 		void close();
-		void settingsChanged();
+		void showHistory();
+		void showSettingsPanel();
+		void updateSettings();
 		void parseArguments(const QStringList &args);
 
 	private slots:

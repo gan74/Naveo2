@@ -17,15 +17,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <nTheme.h>
 
 nTheme::nTheme() {
+	dir = ":/theme/";
 	icons = new QPixmap[iconCount];
-	setPixmap(QPixmap(":/theme/back.png"), Back);
-	setPixmap(QPixmap(":/theme/forward.png"), Forward);
-	setPixmap(QPixmap(":/theme/stop.png"), Stop);
-	setPixmap(QPixmap(":/theme/reload.png"), Reload);
+	setPixmap(QPixmap(dir + "back.png"), Back);
+	setPixmap(QPixmap(dir + "forward.png"), Forward);
+	setPixmap(QPixmap(dir + "stop.png"), Stop);
+	setPixmap(QPixmap(dir + "reload.png"), Reload);
+	setPixmap(QPixmap(dir + "newTab.png"), NewTab);
+	setPixmap(QPixmap(dir + "download.png"), Download);
+	setPixmap(QPixmap(dir + "menu.png"), MainMenu);
+
 	setPixmap(QPixmap(":/earth.png"), DefaultPage);
 	setPixmap(QPixmap(":/plugin.png"), Plugin);
-	setPixmap(QPixmap(":/theme/newTab.png"), NewTab);
-	setPixmap(QPixmap(":/theme/download.png"), Download);
+}
+
+QString nTheme::getThemeDir() const {
+	return dir;
 }
 
 void nTheme::setPixmap(QPixmap pix, IconRole ic) {

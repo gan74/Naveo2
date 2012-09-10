@@ -1,9 +1,9 @@
-#include "nSettingsWidget.h"
+#include <nSettingsWidget.h>
+#include <nNaveoApplication.h>
 
-nSettingsWidget::nSettingsWidget(QWidget *parent) : QWidget(parent){
-}
+nSettingsWidget::nSettingsWidget(nSettingsManager *man, QWidget *parent) : QWidget(parent){
+	manager = man;
 
-void nSettingsWidget::createWidget(){
-    nApp()->debug("Hello, we are in the settings slot.  SMILE! :D … and code it!");
-    return;
+	setWindowTitle(tr("Naveo settings"));
+	setAttribute(Qt::WA_DeleteOnClose);
 }

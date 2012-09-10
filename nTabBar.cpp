@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <nTabBar.h>
 #include <nNaveoApplication.h>
 
-nTabBar::nTabBar(QWidget *menu, QWidget *parent) : QTabBar(parent) {
+nTabBar::nTabBar(QWidget *parent) : QTabBar(parent) {
 	contextMenu = 0;
 	moveTabButton = false;
 	setMovable(true);
@@ -28,11 +28,8 @@ nTabBar::nTabBar(QWidget *menu, QWidget *parent) : QTabBar(parent) {
 	tabButton(0, QTabBar::RightSide)->deleteLater();
 	setTabButton(0, QTabBar::RightSide, 0);
 	setElideMode(Qt::ElideRight);
-    setStyleSheet("QTabBar::tab { width: 220px; } QTabBar::tab:last { width: 31px; } QTabBar:left { margin-left: 35px; }");
+	setStyleSheet("QTabBar::tab { width: 220px; } QTabBar::tab:last { width: 31px; }");
 	connect(this, SIGNAL(tabMoved(int,int)), this, SLOT(tabMoved(int,int)));
-    //Ajout du menu
-    menu->setParent(this);
-    setTabButton(1, QTabBar::LeftSide, ((QWidget*)(menu)));
 }
 
 int nTabBar::count() const {

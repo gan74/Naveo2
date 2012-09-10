@@ -17,15 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef NTABBAR_H
 #define NTABBAR_H
 
-#include <QTabBar>
-#include <QMenu>
+#include <QtGui>
 
 class nTabBar : public QTabBar
 {
     Q_OBJECT
 
 	public:
-        explicit nTabBar(QWidget *menu, QWidget *parent);
+		explicit nTabBar(QWidget *parent);
 
 		int count() const;
 
@@ -46,7 +45,6 @@ class nTabBar : public QTabBar
 		void mousePressEvent(QMouseEvent *event);
 		void mouseReleaseEvent(QMouseEvent *event);
 		void contextMenuEvent(QContextMenuEvent *event);
-
 
 		QMenu *createContextMenuForTab(int index);
 

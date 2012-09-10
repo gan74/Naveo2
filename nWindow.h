@@ -48,7 +48,7 @@ class nWindow : public QWidget
 
 		void changeSettings();
 
-        void showMenu();
+		void showMenu() const;
 
 	private:
 		int tabIndex(QObject *o) {
@@ -56,8 +56,7 @@ class nWindow : public QWidget
 		}
 
 		void disconnectTab(nWebView *v);
-        void connectTab(nWebView *v);
-        void createMenu();
+		void connectTab(nWebView *v);
 
 		nTabBar *tabBar;
 		QToolBar *toolBar;
@@ -70,7 +69,8 @@ class nWindow : public QWidget
 		QAction *forwardAction;
 		QAction *stopAction;
 		QAction *reloadAction;
-        QMenu *globalMenu;
+		QPushButton *menuButton;
+		QMenu *mainMenu; // in nNaveoApplication ?
 };
 
 #endif // NWINDOW_H

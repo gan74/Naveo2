@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class nTheme
 {
 	public:
-		static const int iconCount = 8;
+		static const int iconCount = 9;
 		enum IconRole {
 			Back = 0,
 			Forward = 1,
@@ -31,7 +31,8 @@ class nTheme
 			DefaultPage = 4,
 			Plugin = 5,
 			NewTab = 6,
-			Download = 7
+			Download = 7,
+			MainMenu = 8
 		};
 
 		nTheme();
@@ -39,6 +40,7 @@ class nTheme
 		void setPixmap(QPixmap pix, IconRole ic);
 		QPixmap getPixmap(IconRole ic) const;
 		QIcon getIcon(IconRole ic) const;
+		QString getThemeDir() const; // bad but we have no choice
 
 		virtual QIcon getStyleIcon(QStyle::StandardPixmap ic) const {
 			return QApplication::style()->standardIcon(ic);
@@ -46,6 +48,7 @@ class nTheme
 
 
 	private:
+		QString dir;
 		QPixmap *icons;
 
 

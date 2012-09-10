@@ -38,8 +38,9 @@ nNaveoApplication::nNaveoApplication(int argc, char *argv[]) : QApplication(argc
 
 
 	setWindowIcon(QIcon(":/icon.png"));
-	connect(settings, SIGNAL(settingsChanged()), this, SLOT(settingsChanged()));
-	settingsChanged();
+	connect(settings, SIGNAL(settingsChanged()), this, SIGNAL(settingsChanged()));
+	connect(this, SIGNAL(settingsChanged()), this, SLOT(updateSettings()));
+	updateSettings();
 }
 
 nNaveoApplication::~nNaveoApplication() {
@@ -105,12 +106,22 @@ void nNaveoApplication::newLocalConnection() {
 
 }
 
+void nNaveoApplication::showHistory() {
+	(new nHistoryWidget(historyManager))->show(); // the beauty of Qt : alloc and forget
+}
+
+void nNaveoApplication::showSettingsPanel() {
+	nSettingsWidget *panel = new nSettingsWidget(settings);
+	connect(panel, SIGNAL(destroyed()), this, SIGNAL(settingsChanged())); // panel is deleted on close
+	panel->show();
+}
+
 void nNaveoApplication::parseArguments(const QStringList &args) {
 	foreach(QString arg, args) {
 		if(arg == QLatin1String("-console")) {
 			console->show();
 		} else if(arg == QLatin1String("-hmanager")) {
-			(new nHistoryWidget(historyManager))->show(); // the beauty of Qt : alloc and forget
+			showHistory();
 		} else if(arg.left(4) == QLatin1String("http")) {
 			nWindow *win = new nWindow();
 			win->addTab()->load(QUrl(arg));
@@ -150,7 +161,7 @@ void nNaveoApplication::close() {
 	settings->save();
 }
 
-void nNaveoApplication::settingsChanged() {
+void nNaveoApplication::updateSettings() {
 	loadTranslator();
 }
 
