@@ -184,7 +184,6 @@ void nNaveoApplication::unregisterWindow(nWindow *w) {
 }
 
 void nNaveoApplication::updateSettings() {
-	loadTranslator();
 }
 
 void nNaveoApplication::close() {
