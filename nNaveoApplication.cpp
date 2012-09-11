@@ -57,10 +57,13 @@ nNaveoApplication::~nNaveoApplication() {
 void nNaveoApplication::checkInstance() {
 	static const QString appName = "Naveo browser";
 	server = 0;
+	#ifndef N_NO_SHARED_MEMORY
 	sharedMemory = new QSharedMemory(appName);
 	if(!sharedMemory->create(sizeof(uint))) {
 		if(sharedMemory->error() == QSharedMemory::AlreadyExists) {
 			debug("There is already an instance running");
+	#endif
+		
 			QLocalSocket *socket = new QLocalSocket(this);
 			socket->connectToServer(appName);
 			if(socket->waitForConnected(500)) {
@@ -70,12 +73,15 @@ void nNaveoApplication::checkInstance() {
 				}
 				socket->flush();
 				socket->waitForBytesWritten();
+				throw nNaveoAlreadyRunningException();
 			}
-			throw nNaveoAlreadyRunningException();
+			socket->deleteLater();
+	#ifndef N_NO_SHARED_MEMORY
 		} else {
 			error("unable to get shared memory access : " + sharedMemory->errorString());
 		}
 	} else {
+	#endif
 		server = new QLocalServer(this);
 		connect(server, SIGNAL(newConnection()), this, SLOT(newLocalConnection()));
 		if(!server->listen(appName)) {
@@ -83,7 +89,9 @@ void nNaveoApplication::checkInstance() {
 		} else {
 			debug("server created");
 		}
+	#ifndef N_NO_SHARED_MEMORY
 	}
+	#endif
 }
 
 void nNaveoApplication::newLocalConnection() {
