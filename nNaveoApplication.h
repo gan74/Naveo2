@@ -18,6 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define NNAVEOAPPLICATION_H
 
 #define nApp nNaveoApplication::app
+#ifndef Q_WS_WIN // Windows delete shared memory even after a crash
+	#define N_NO_SHARED_MEMORY
+#endif
+
 #include <QtWebKit>
 #include <QWebSettings>
 #include <QtGui>
@@ -90,7 +94,9 @@ class nNaveoApplication : public QApplication
 		void initWebSettings();
 		void loadTranslator();
 
+		#ifndef N_NO_SHARED_MEMORY
 		QSharedMemory *sharedMemory;
+		#endif
 		QLocalServer *server;
 
 		QTranslator *translator;
