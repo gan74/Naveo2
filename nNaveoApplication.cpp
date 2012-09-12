@@ -18,6 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <nWindow.h>
 
 nNaveoApplication::nNaveoApplication(int argc, char *argv[]) : QApplication(argc, argv) {
+
+    //UTF-8 support
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+
 	connect(this, SIGNAL(aboutToQuit()), this, SLOT(close()));
 	console = new nDebugConsole();
 

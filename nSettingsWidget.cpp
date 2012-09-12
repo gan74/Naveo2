@@ -4,11 +4,6 @@
 nSettingsWidget::nSettingsWidget(nSettingsManager *man, QWidget *parent) : QWidget(parent){
 	manager = man;
 
-    //UTF-8 support
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
-
 	setWindowTitle(tr("Naveo settings"));
 	setAttribute(Qt::WA_DeleteOnClose);
     setMinimumSize(280, 280);
