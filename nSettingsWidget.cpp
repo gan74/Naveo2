@@ -4,6 +4,11 @@
 nSettingsWidget::nSettingsWidget(nSettingsManager *man, QWidget *parent) : QWidget(parent){
 	manager = man;
 
+    //UTF-8 support
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+
 	setWindowTitle(tr("Naveo settings"));
 	setAttribute(Qt::WA_DeleteOnClose);
     setMinimumSize(280, 280);
@@ -25,14 +30,22 @@ nSettingsWidget::nSettingsWidget(nSettingsManager *man, QWidget *parent) : QWidg
     QLabel *homePage = new QLabel(tr("Home page : "));
     QLineEdit *homePageEdit = new QLineEdit("http://www.google.be", generalSettings);
     QGridLayout *generalLayout = new QGridLayout(generalSettings);
+    QLabel *downloadDirectoryLabel = new QLabel(tr("Save downloads in : "));
+    QLineEdit *downloadDirectoryEdit = new QLineEdit; //GET DEFAULT DIRECTORY (will be saved in QSettings)
+    downloadDirectoryEdit->setEnabled(false);
+    QPushButton *downloadDirectoryButton = new QPushButton("…");
+    downloadDirectoryButton->setMaximumWidth(25);
     generalLayout->addWidget(homePage, 0, 0);
     generalLayout->addWidget(homePageEdit, 1, 0);
+    generalLayout->addWidget(downloadDirectoryLabel, 2, 0);
+    generalLayout->addWidget(downloadDirectoryEdit, 3, 0);
+    generalLayout->addWidget(downloadDirectoryButton, 3, 1);
 
     //-----------------------------------------------------------
     // TAB : INTERNET SETTINGS
     //-----------------------------------------------------------
     QWidget *internetSettings = new QWidget(tabSettings);
-    tabSettings->addTab(internetSettings, tr("Internet"));
+    tabSettings->addTab(internetSettings, tr("Internet")); //ICON
     QLabel *offlineStorage, *offlineCache, *localeStorage, *dnsPrefetch, *loadImages, *enablePlugins, *enableJavascript, *enableJava, *javascriptWindow;
     QCheckBox *checkOfflineStorage, *checkOfflineCache, *checkLocaleStorage, *checkDnsPrefetch, *checkLoadImages, *checkEnablePlugins, *checkEnableJavascript, *checkEnableJava, *checkJavascriptWindow;
     checkOfflineStorage = new QCheckBox;

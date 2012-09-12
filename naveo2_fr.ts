@@ -110,40 +110,115 @@
 <context>
     <name>nSettingsWidget</name>
     <message>
-        <location filename="nSettingsWidget.cpp" line="7"/>
+        <location filename="nSettingsWidget.cpp" line="12"/>
         <source>Naveo settings</source>
         <translation>Naveo2 : Préférences</translation>
+    </message>
+    <message>
+        <location filename="nSettingsWidget.cpp" line="21"/>
+        <source>Validate</source>
+        <translation>Valider</translation>
+    </message>
+    <message>
+        <location filename="nSettingsWidget.cpp" line="22"/>
+        <source>Quit</source>
+        <translation>Quitter</translation>
+    </message>
+    <message>
+        <location filename="nSettingsWidget.cpp" line="29"/>
+        <source>General</source>
+        <translation>Général</translation>
+    </message>
+    <message>
+        <location filename="nSettingsWidget.cpp" line="30"/>
+        <source>Home page : </source>
+        <translation>Page d&apos;accueil : </translation>
+    </message>
+    <message>
+        <location filename="nSettingsWidget.cpp" line="33"/>
+        <source>Save downloads in : </source>
+        <translation>Enregistrer les téléchargements dans : </translation>
+    </message>
+    <message>
+        <location filename="nSettingsWidget.cpp" line="48"/>
+        <source>Internet</source>
+        <translation>Internet</translation>
+    </message>
+    <message>
+        <location filename="nSettingsWidget.cpp" line="60"/>
+        <source>Offline storage</source>
+        <translation>Stockage hors-ligne</translation>
+    </message>
+    <message>
+        <location filename="nSettingsWidget.cpp" line="61"/>
+        <source>Enable cache</source>
+        <translation>Activer le cache</translation>
+    </message>
+    <message>
+        <location filename="nSettingsWidget.cpp" line="62"/>
+        <source>Local Storage</source>
+        <translation>Stockage local</translation>
+    </message>
+    <message>
+        <location filename="nSettingsWidget.cpp" line="63"/>
+        <source>Enable DNS prefetch</source>
+        <translation>Activer le préchargement des DNS</translation>
+    </message>
+    <message>
+        <location filename="nSettingsWidget.cpp" line="64"/>
+        <source>Load images</source>
+        <translation>Charger les images</translation>
+    </message>
+    <message>
+        <location filename="nSettingsWidget.cpp" line="65"/>
+        <source>Enable plugins (flash,…)</source>
+        <translation>Activer les plugins (flash,…)</translation>
+    </message>
+    <message>
+        <location filename="nSettingsWidget.cpp" line="66"/>
+        <source>Enable Javascript</source>
+        <translation>Activer Javascript</translation>
+    </message>
+    <message>
+        <location filename="nSettingsWidget.cpp" line="67"/>
+        <source>Enable Java</source>
+        <translation>Activer Java</translation>
+    </message>
+    <message>
+        <location filename="nSettingsWidget.cpp" line="68"/>
+        <source>Javascript can open windows</source>
+        <translation>Javascript peut ouvrir des fenêtres</translation>
     </message>
 </context>
 <context>
     <name>nWindow</name>
     <message>
-        <location filename="nWindow.cpp" line="70"/>
+        <location filename="nWindow.cpp" line="72"/>
         <source>Back</source>
         <translation>Précédent</translation>
     </message>
     <message>
-        <location filename="nWindow.cpp" line="71"/>
+        <location filename="nWindow.cpp" line="73"/>
         <source>Forward</source>
         <translation>Suivant</translation>
     </message>
     <message>
-        <location filename="nWindow.cpp" line="72"/>
+        <location filename="nWindow.cpp" line="74"/>
         <source>Reload</source>
         <translation>Actualiser</translation>
     </message>
     <message>
-        <location filename="nWindow.cpp" line="73"/>
+        <location filename="nWindow.cpp" line="75"/>
         <source>Stop</source>
         <translation>Arrêter</translation>
     </message>
     <message>
-        <location filename="nWindow.cpp" line="81"/>
+        <location filename="nWindow.cpp" line="83"/>
         <source>Preferences</source>
         <translation>Préférences</translation>
     </message>
     <message>
-        <location filename="nWindow.cpp" line="130"/>
+        <location filename="nWindow.cpp" line="132"/>
         <source>New tab</source>
         <translation>Nouvel onglet</translation>
     </message>
