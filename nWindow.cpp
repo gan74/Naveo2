@@ -80,8 +80,6 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 	mainMenu->addAction(reloadAction);
 	mainMenu->addAction(stopAction);
 	mainMenu->addSeparator();
-    mainMenu->addAction(QIcon(":/theme.png"), tr("Private browsing")); //IDEA : stop browser & startit again with "-private" option -> Need to change a QWebSetting
-    mainMenu->addSeparator();
 	mainMenu->addAction(tr("Preferences"), nApp(), SLOT(showSettingsPanel()));
 
 	menuButton = new QPushButton(this);
