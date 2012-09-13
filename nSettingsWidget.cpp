@@ -6,22 +6,33 @@ nSettingsWidget::nSettingsWidget(nSettingsManager *man, QWidget *parent) : QWidg
 
 	setWindowTitle(tr("Naveo settings"));
 	setAttribute(Qt::WA_DeleteOnClose);
-    setMinimumSize(280, 280);
 
-    QTabWidget *tabSettings = new QTabWidget(this);
-    tabSettings->setTabPosition(QTabWidget::West);
-
-
+    QListWidget *settingsList = new QListWidget;
+    settingsList->setMaximumWidth(100);
+    QStackedWidget *settingsView = new QStackedWidget(this);
     QPushButton *validate, *quit;
-    validate = new QPushButton(tr("Validate"), this); //NEED ICON
-    quit = new QPushButton(tr("Quit"), this); //NEED ICON
+    validate = new QPushButton(QIcon(":/validate.png"), tr("Validate"), this);
+    quit = new QPushButton(QIcon(":/exit.png"), tr("Quit"), this);
+    QGridLayout *settingsWidgetLayout = new QGridLayout(this);
+
+    QListWidgetItem *itemInternet = new QListWidgetItem(QIcon(":/earth.png"), tr("Internet"));
+    QListWidgetItem *itemGeneral = new QListWidgetItem(QIcon(":/settings.png"), tr("General"));
+    settingsList->addItem(itemInternet);
+    settingsList->addItem(itemGeneral);
+
+    settingsWidgetLayout->addWidget(settingsList, 0, 0, 1, 1);
+    settingsWidgetLayout->addWidget(settingsView, 0, 1, 1, 2);
+    settingsWidgetLayout->addWidget(validate, 1, 1);
+    settingsWidgetLayout->addWidget(quit, 1, 2);
+
     connect(quit, SIGNAL(clicked()), this, SLOT(close()));
+    connect(settingsList, SIGNAL(currentRowChanged(int)), settingsView, SLOT(setCurrentIndex(int)));
 
     //-----------------------------------------------------------
     // TAB : GENERAL SETTINGS
     //-----------------------------------------------------------
-    QWidget *generalSettings = new QWidget(tabSettings);
-    tabSettings->addTab(generalSettings, tr("General")); //CHANGE ICON
+    QWidget *generalSettings = new QWidget(settingsView);
+    settingsView->addWidget(generalSettings);
     QLabel *homePage = new QLabel(tr("Home page : "));
     QLineEdit *homePageEdit = new QLineEdit("http://www.google.be", generalSettings);
     QGridLayout *generalLayout = new QGridLayout(generalSettings);
@@ -39,8 +50,8 @@ nSettingsWidget::nSettingsWidget(nSettingsManager *man, QWidget *parent) : QWidg
     //-----------------------------------------------------------
     // TAB : INTERNET SETTINGS
     //-----------------------------------------------------------
-    QWidget *internetSettings = new QWidget(tabSettings);
-    tabSettings->addTab(internetSettings, tr("Internet")); //ICON
+    QWidget *internetSettings = new QWidget(settingsView);
+    settingsView->addWidget(internetSettings);
     QLabel *offlineStorage, *offlineCache, *localeStorage, *dnsPrefetch, *loadImages, *enablePlugins, *enableJavascript, *enableJava, *javascriptWindow;
     QCheckBox *checkOfflineStorage, *checkOfflineCache, *checkLocaleStorage, *checkDnsPrefetch, *checkLoadImages, *checkEnablePlugins, *checkEnableJavascript, *checkEnableJava, *checkJavascriptWindow;
     checkOfflineStorage = new QCheckBox;
