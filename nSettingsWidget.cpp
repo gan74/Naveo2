@@ -53,7 +53,6 @@ nSettingsWidget::nSettingsWidget(nSettingsManager *man, QWidget *parent) : QWidg
     QWidget *internetSettings = new QWidget(settingsView);
     settingsView->addWidget(internetSettings);
     QLabel *offlineStorage, *offlineCache, *localeStorage, *dnsPrefetch, *loadImages, *enablePlugins, *enableJavascript, *enableJava, *javascriptWindow;
-    QCheckBox *checkOfflineStorage, *checkOfflineCache, *checkLocaleStorage, *checkDnsPrefetch, *checkLoadImages, *checkEnablePlugins, *checkEnableJavascript, *checkEnableJava, *checkJavascriptWindow;
     checkOfflineStorage = new QCheckBox;
     checkOfflineCache = new QCheckBox;
     checkLocaleStorage = new QCheckBox;
@@ -74,27 +73,34 @@ nSettingsWidget::nSettingsWidget(nSettingsManager *man, QWidget *parent) : QWidg
     javascriptWindow = new QLabel(tr("Javascript can open windows"));
 
     QGridLayout *internetLayout = new QGridLayout(internetSettings);
-    internetLayout->addWidget(offlineStorage, 0, 0);
-    internetLayout->addWidget(offlineCache, 1, 0);
-    internetLayout->addWidget(localeStorage, 2, 0);
-    internetLayout->addWidget(dnsPrefetch, 3, 0);
-    internetLayout->addWidget(loadImages, 4, 0);
-    internetLayout->addWidget(enablePlugins, 5, 0);
-    internetLayout->addWidget(enableJavascript, 6, 0);
-    internetLayout->addWidget(enableJava, 7, 0);
-    internetLayout->addWidget(javascriptWindow, 8, 0);
+    internetLayout->addWidget(offlineStorage, 0, 1);
+    internetLayout->addWidget(offlineCache, 1, 1);
+    internetLayout->addWidget(localeStorage, 2, 1);
+    internetLayout->addWidget(dnsPrefetch, 3, 1);
+    internetLayout->addWidget(loadImages, 4, 1);
+    internetLayout->addWidget(enablePlugins, 5, 1);
+    internetLayout->addWidget(enableJavascript, 6, 1);
+    internetLayout->addWidget(enableJava, 7, 1);
+    internetLayout->addWidget(javascriptWindow, 8, 1);
 
-    internetLayout->addWidget(checkOfflineStorage, 0, 1);
-    internetLayout->addWidget(checkOfflineCache, 1, 1);
-    internetLayout->addWidget(checkLocaleStorage, 2, 1);
-    internetLayout->addWidget(checkDnsPrefetch, 3, 1);
-    internetLayout->addWidget(checkLoadImages, 4, 1);
-    internetLayout->addWidget(checkEnablePlugins, 5, 1);
-    internetLayout->addWidget(checkEnableJavascript, 6, 1);
-    internetLayout->addWidget(checkEnableJava, 7, 1);
-    internetLayout->addWidget(checkJavascriptWindow, 8, 1);
+    internetLayout->addWidget(checkOfflineStorage, 0, 0);
+    internetLayout->addWidget(checkOfflineCache, 1, 0);
+    internetLayout->addWidget(checkLocaleStorage, 2, 0);
+    internetLayout->addWidget(checkDnsPrefetch, 3, 0);
+    internetLayout->addWidget(checkLoadImages, 4, 0);
+    internetLayout->addWidget(checkEnablePlugins, 5, 0);
+    internetLayout->addWidget(checkEnableJavascript, 6, 0);
+    internetLayout->addWidget(checkEnableJava, 7, 0);
+    internetLayout->addWidget(checkJavascriptWindow, 8, 0);
 
     //Buttons
     validate->move(30, 275);
     quit->move(180, 275);
+    connect(validate, SIGNAL(clicked()), this, SLOT(saveSettings()));
+    connect(quit, SIGNAL(clicked()), this, SLOT(close()));
+}
+
+void nSettingsWidget::saveSettings(){
+
+    return;
 }
