@@ -34,10 +34,10 @@ nSettingsWidget::nSettingsWidget(nSettingsManager *man, QWidget *parent) : QWidg
     QWidget *generalSettings = new QWidget(settingsView);
     settingsView->addWidget(generalSettings);
     QLabel *homePage = new QLabel(tr("Home page : "));
-    QLineEdit *homePageEdit = new QLineEdit("http://www.google.be", generalSettings);
+    homePageEdit = new QLineEdit("http://www.google.be", generalSettings);
     QGridLayout *generalLayout = new QGridLayout(generalSettings);
     QLabel *downloadDirectoryLabel = new QLabel(tr("Save downloads in : "));
-    QLineEdit *downloadDirectoryEdit = new QLineEdit; //GET DEFAULT DIRECTORY (will be saved in QSettings)
+    downloadDirectoryEdit = new QLineEdit; //GET DEFAULT DIRECTORY (will be saved in QSettings)
     downloadDirectoryEdit->setEnabled(false);
     QPushButton *downloadDirectoryButton = new QPushButton("…");
     downloadDirectoryButton->setMaximumWidth(25);
@@ -54,14 +54,23 @@ nSettingsWidget::nSettingsWidget(nSettingsManager *man, QWidget *parent) : QWidg
     settingsView->addWidget(internetSettings);
     QLabel *offlineStorage, *offlineCache, *localeStorage, *dnsPrefetch, *loadImages, *enablePlugins, *enableJavascript, *enableJava, *javascriptWindow;
     checkOfflineStorage = new QCheckBox;
+    checkOfflineStorage->setChecked(manager->getSettings(nSettingsManager::OfflineStorage).toBool());
     checkOfflineCache = new QCheckBox;
+    checkOfflineCache->setChecked(manager->getSettings(nSettingsManager::OfflineCache).toBool());
     checkLocaleStorage = new QCheckBox;
+    checkLocaleStorage->setChecked(manager->getSettings(nSettingsManager::localeStorage).toBool());
     checkDnsPrefetch = new QCheckBox;
+    checkDnsPrefetch->setChecked(manager->getSettings(nSettingsManager::dnsPrefetch).toBool());
     checkLoadImages = new QCheckBox;
+    checkLoadImages->setChecked(manager->getSettings(nSettingsManager::loadImages).toBool());
     checkEnablePlugins = new QCheckBox;
+    checkEnablePlugins->setChecked(manager->getSettings(nSettingsManager::enablePlugins).toBool());
     checkEnableJavascript = new QCheckBox;
+    checkEnableJavascript->setChecked(manager->getSettings(nSettingsManager::enableJavascript).toBool());
     checkEnableJava = new QCheckBox;
+    checkEnableJava->setChecked(manager->getSettings(nSettingsManager::enableJava).toBool());
     checkJavascriptWindow = new QCheckBox;
+    checkJavascriptWindow->setChecked(manager->getSettings(nSettingsManager::javascriptWindow).toBool());
     offlineStorage = new QLabel(tr("Offline storage"));
     offlineCache = new QLabel(tr("Enable cache"));
     localeStorage = new QLabel(tr("Local Storage"));
@@ -101,6 +110,16 @@ nSettingsWidget::nSettingsWidget(nSettingsManager *man, QWidget *parent) : QWidg
 }
 
 void nSettingsWidget::saveSettings(){
-
+    manager->setSettings(nSettingsManager::OfflineStorage, checkOfflineStorage->isChecked());
+    manager->setSettings(nSettingsManager::OfflineCache, checkOfflineCache->isChecked());
+    manager->setSettings(nSettingsManager::localeStorage, checkLocaleStorage->isChecked());
+    manager->setSettings(nSettingsManager::dnsPrefetch, checkDnsPrefetch->isChecked());
+    manager->setSettings(nSettingsManager::loadImages, checkLoadImages->isChecked());
+    manager->setSettings(nSettingsManager::enablePlugins, checkEnablePlugins->isChecked());
+    manager->setSettings(nSettingsManager::enableJavascript, checkEnableJavascript->isChecked());
+    manager->setSettings(nSettingsManager::enableJava, checkEnableJava->isChecked());
+    manager->setSettings(nSettingsManager::javascriptWindow, checkJavascriptWindow->isChecked());
+    manager->setSettings(nSettingsManager::homePage, ((!homePageEdit->text().isEmpty() && QUrl(homePageEdit->text()).isValid()) ? homePageEdit->text() : "http://www.google.be"));
+    manager->setSettings(nSettingsManager::downloadDir, ((!downloadDirectoryEdit->text().isEmpty()) ? downloadDirectoryEdit->text() : QDir::homePath()));
     return;
 }

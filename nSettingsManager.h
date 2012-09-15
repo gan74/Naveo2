@@ -24,12 +24,23 @@ class nSettingsManager : public QObject
 	Q_OBJECT
 
 	public:
-		static const int maxSettings = 4;
+        static const int maxSettings = 15;
 		enum Settings {
 			SessionName = 0,
 			Locale = 1,
 			HideStopButton = 2,
-			HistoryFilePath = 3
+            HistoryFilePath = 3,
+            OfflineStorage = 4,
+            OfflineCache = 5,
+            localeStorage = 6,
+            dnsPrefetch = 7,
+            loadImages = 8,
+            enablePlugins = 9,
+            enableJavascript = 10,
+            enableJava = 11,
+            javascriptWindow = 12,
+            homePage = 13,
+            downloadDir = 14
 		};
 
 
@@ -37,7 +48,9 @@ class nSettingsManager : public QObject
 		~nSettingsManager();
 
 		QVariant getSettings(Settings s) const;
+        //QVariant getSettings(QString s) const; //Overload.  See below for further information
 		void setSettings(Settings s, QVariant v);
+        //void setSettings(QString s, QVariant v); //Overload to set a setting witch isn't in Settings
 
 	public slots:
 		void save() const;

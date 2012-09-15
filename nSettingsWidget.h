@@ -17,6 +17,7 @@ private slots:
 	private:
 		nSettingsManager *manager;
         QCheckBox *checkOfflineStorage, *checkOfflineCache, *checkLocaleStorage, *checkDnsPrefetch, *checkLoadImages, *checkEnablePlugins, *checkEnableJavascript, *checkEnableJava, *checkJavascriptWindow;
+        QLineEdit *homePageEdit, *downloadDirectoryEdit;
 
 };
 

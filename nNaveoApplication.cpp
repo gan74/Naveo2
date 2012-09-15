@@ -229,16 +229,16 @@ void nNaveoApplication::initWebSettings() {
 	webSettings->setMaximumPagesInCache(40);
 	webSettings->setIconDatabasePath(getPath() + "cache/");
 	webSettings->setOfflineStoragePath(getPath() + "cache/");
-	webSettings->setAttribute(QWebSettings::OfflineStorageDatabaseEnabled, true);
-	webSettings->setAttribute(QWebSettings::OfflineWebApplicationCacheEnabled, true);
-	webSettings->setAttribute(QWebSettings::LocalStorageDatabaseEnabled, true);
-	webSettings->setAttribute(QWebSettings::DnsPrefetchEnabled, true);
-	webSettings->setAttribute(QWebSettings::AutoLoadImages, true);
-	webSettings->setAttribute(QWebSettings::PluginsEnabled, true);
-	webSettings->setAttribute(QWebSettings::JavascriptEnabled, true);
-	webSettings->setAttribute(QWebSettings::JavascriptCanOpenWindows , true);
-	webSettings->setAttribute(QWebSettings::JavaEnabled, true);
-	webSettings->setAttribute(QWebSettings::PrivateBrowsingEnabled , false);
+    webSettings->setAttribute(QWebSettings::OfflineStorageDatabaseEnabled, settings->getSettings(nSettingsManager::OfflineStorage).toBool());
+    webSettings->setAttribute(QWebSettings::OfflineWebApplicationCacheEnabled, settings->getSettings(nSettingsManager::OfflineCache).toBool());
+    webSettings->setAttribute(QWebSettings::LocalStorageDatabaseEnabled, settings->getSettings(nSettingsManager::localeStorage).toBool());
+    webSettings->setAttribute(QWebSettings::DnsPrefetchEnabled, settings->getSettings(nSettingsManager::dnsPrefetch).toBool());
+    webSettings->setAttribute(QWebSettings::AutoLoadImages, settings->getSettings(nSettingsManager::loadImages).toBool());
+    webSettings->setAttribute(QWebSettings::PluginsEnabled, settings->getSettings(nSettingsManager::enablePlugins).toBool());
+    webSettings->setAttribute(QWebSettings::JavascriptEnabled, settings->getSettings(nSettingsManager::enableJavascript).toBool());
+    webSettings->setAttribute(QWebSettings::JavascriptCanOpenWindows , settings->getSettings(nSettingsManager::javascriptWindow).toBool());
+    webSettings->setAttribute(QWebSettings::JavaEnabled, settings->getSettings(nSettingsManager::enableJava).toBool());
+    //webSettings->setAttribute(QWebSettings::PrivateBrowsingEnabled , settings->getSettings().toBool());
 	webSettings->setWebGraphic(QWebSettings::MissingPluginGraphic, theme->getPixmap(nTheme::Plugin));
 	webSettings->setWebGraphic(QWebSettings::DefaultFrameIconGraphic, theme->getPixmap(nTheme::DefaultPage));
 }

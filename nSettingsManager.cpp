@@ -25,6 +25,17 @@ nSettingsManager::nSettingsManager(QObject *parent) : QObject(parent) {
 	names[Locale] = "locale";
 	names[HideStopButton] = "hideStopButton";
 	names[HistoryFilePath] = "historyFilePath";
+    names[OfflineStorage] = "OfflineStorage";
+    names[OfflineCache] = "OfflineCache";
+    names[localeStorage] = "localeStorage";
+    names[dnsPrefetch] = "dnsPrefetch";
+    names[loadImages] = "loadImages";
+    names[enablePlugins] = "enablePlugins";
+    names[enableJavascript] = "enableJavascript";
+    names[enableJava] = "enableJava";
+    names[javascriptWindow] = "javascriptWindow";
+    names[homePage] = "homePage";
+    names[downloadDir] = "downloadDir";
 
 	timer = new QTimer(this);
 	timer->setInterval(2500);
@@ -42,7 +53,8 @@ QVariant nSettingsManager::getSettings(Settings s) const {
 void nSettingsManager::setSettings(Settings s, QVariant v) {
 	if(settings[s] != v) {
 		settings[s] = v;
-		emit(settingsChanged());
+        if(s == SessionName || s == Locale || s == HideStopButton || s == HistoryFilePath)
+            emit(settingsChanged());
 	}
 }
 
@@ -73,7 +85,18 @@ void nSettingsManager::load() {
 	setSettings(Locale, QLocale(s.value(names[Locale], QLocale::system().name()).toString()));
 	setSettings(HideStopButton, s.value(names[HideStopButton], true));
 	setSettings(HistoryFilePath, s.value(names[HistoryFilePath], nApp()->getPath() + getSettings(SessionName).toString() + "_history"));
-	s.endGroup();
+    setSettings(OfflineStorage, s.value(names[OfflineStorage], true));
+    setSettings(OfflineCache, s.value(names[OfflineCache], true));
+    setSettings(localeStorage, s.value(names[localeStorage], true));
+    setSettings(dnsPrefetch, s.value(names[dnsPrefetch], true));
+    setSettings(loadImages, s.value(names[loadImages], true));
+    setSettings(enablePlugins, s.value(names[enablePlugins], true));
+    setSettings(enableJavascript, s.value(names[enableJavascript], true));
+    setSettings(enableJava, s.value(names[enableJava], false)); //More secure without java
+    setSettings(javascriptWindow, s.value(names[javascriptWindow], true));
+    setSettings(homePage, s.value(names[homePage], "http://www.google.be"));
+    setSettings(downloadDir, s.value(names[downloadDir], QDir::homePath()));
+    s.endGroup();
 
 	blockSignals(false);
 	emit settingsChanged();
