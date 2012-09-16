@@ -34,10 +34,10 @@ nSettingsWidget::nSettingsWidget(nSettingsManager *man, QWidget *parent) : QWidg
     QWidget *generalSettings = new QWidget(settingsView);
     settingsView->addWidget(generalSettings);
     QLabel *homePage = new QLabel(tr("Home page : "));
-    homePageEdit = new QLineEdit("http://www.google.be", generalSettings);
+    homePageEdit = new QLineEdit(manager->getSettings(nSettingsManager::homePage).toString(), generalSettings);
     QGridLayout *generalLayout = new QGridLayout(generalSettings);
     QLabel *downloadDirectoryLabel = new QLabel(tr("Save downloads in : "));
-    downloadDirectoryEdit = new QLineEdit; //GET DEFAULT DIRECTORY (will be saved in QSettings)
+    downloadDirectoryEdit = new QLineEdit(manager->getSettings(nSettingsManager::downloadDir).toString(), generalSettings);
     downloadDirectoryEdit->setEnabled(false);
     QPushButton *downloadDirectoryButton = new QPushButton("…");
     downloadDirectoryButton->setMaximumWidth(25);
@@ -54,9 +54,9 @@ nSettingsWidget::nSettingsWidget(nSettingsManager *man, QWidget *parent) : QWidg
     settingsView->addWidget(internetSettings);
     QLabel *offlineStorage, *offlineCache, *localeStorage, *dnsPrefetch, *loadImages, *enablePlugins, *enableJavascript, *enableJava, *javascriptWindow;
     checkOfflineStorage = new QCheckBox;
-    checkOfflineStorage->setChecked(manager->getSettings(nSettingsManager::OfflineStorage).toBool());
+    checkOfflineStorage->setChecked(manager->getSettings(nSettingsManager::offlineStorage).toBool());
     checkOfflineCache = new QCheckBox;
-    checkOfflineCache->setChecked(manager->getSettings(nSettingsManager::OfflineCache).toBool());
+    checkOfflineCache->setChecked(manager->getSettings(nSettingsManager::offlineCache).toBool());
     checkLocaleStorage = new QCheckBox;
     checkLocaleStorage->setChecked(manager->getSettings(nSettingsManager::localeStorage).toBool());
     checkDnsPrefetch = new QCheckBox;
@@ -110,8 +110,8 @@ nSettingsWidget::nSettingsWidget(nSettingsManager *man, QWidget *parent) : QWidg
 }
 
 void nSettingsWidget::saveSettings(){
-    manager->setSettings(nSettingsManager::OfflineStorage, checkOfflineStorage->isChecked());
-    manager->setSettings(nSettingsManager::OfflineCache, checkOfflineCache->isChecked());
+    manager->setSettings(nSettingsManager::offlineStorage, checkOfflineStorage->isChecked());
+    manager->setSettings(nSettingsManager::offlineCache, checkOfflineCache->isChecked());
     manager->setSettings(nSettingsManager::localeStorage, checkLocaleStorage->isChecked());
     manager->setSettings(nSettingsManager::dnsPrefetch, checkDnsPrefetch->isChecked());
     manager->setSettings(nSettingsManager::loadImages, checkLoadImages->isChecked());

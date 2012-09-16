@@ -25,8 +25,8 @@ nSettingsManager::nSettingsManager(QObject *parent) : QObject(parent) {
 	names[Locale] = "locale";
 	names[HideStopButton] = "hideStopButton";
 	names[HistoryFilePath] = "historyFilePath";
-    names[OfflineStorage] = "OfflineStorage";
-    names[OfflineCache] = "OfflineCache";
+    names[offlineStorage] = "OfflineStorage";
+    names[offlineCache] = "OfflineCache";
     names[localeStorage] = "localeStorage";
     names[dnsPrefetch] = "dnsPrefetch";
     names[loadImages] = "loadImages";
@@ -85,8 +85,8 @@ void nSettingsManager::load() {
 	setSettings(Locale, QLocale(s.value(names[Locale], QLocale::system().name()).toString()));
 	setSettings(HideStopButton, s.value(names[HideStopButton], true));
 	setSettings(HistoryFilePath, s.value(names[HistoryFilePath], nApp()->getPath() + getSettings(SessionName).toString() + "_history"));
-    setSettings(OfflineStorage, s.value(names[OfflineStorage], true));
-    setSettings(OfflineCache, s.value(names[OfflineCache], true));
+    setSettings(offlineStorage, s.value(names[offlineStorage], true));
+    setSettings(offlineCache, s.value(names[offlineCache], true));
     setSettings(localeStorage, s.value(names[localeStorage], true));
     setSettings(dnsPrefetch, s.value(names[dnsPrefetch], true));
     setSettings(loadImages, s.value(names[loadImages], true));

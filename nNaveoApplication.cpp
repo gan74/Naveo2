@@ -229,8 +229,8 @@ void nNaveoApplication::initWebSettings() {
 	webSettings->setMaximumPagesInCache(40);
 	webSettings->setIconDatabasePath(getPath() + "cache/");
 	webSettings->setOfflineStoragePath(getPath() + "cache/");
-    webSettings->setAttribute(QWebSettings::OfflineStorageDatabaseEnabled, settings->getSettings(nSettingsManager::OfflineStorage).toBool());
-    webSettings->setAttribute(QWebSettings::OfflineWebApplicationCacheEnabled, settings->getSettings(nSettingsManager::OfflineCache).toBool());
+    webSettings->setAttribute(QWebSettings::OfflineStorageDatabaseEnabled, settings->getSettings(nSettingsManager::offlineStorage).toBool());
+    webSettings->setAttribute(QWebSettings::OfflineWebApplicationCacheEnabled, settings->getSettings(nSettingsManager::offlineCache).toBool());
     webSettings->setAttribute(QWebSettings::LocalStorageDatabaseEnabled, settings->getSettings(nSettingsManager::localeStorage).toBool());
     webSettings->setAttribute(QWebSettings::DnsPrefetchEnabled, settings->getSettings(nSettingsManager::dnsPrefetch).toBool());
     webSettings->setAttribute(QWebSettings::AutoLoadImages, settings->getSettings(nSettingsManager::loadImages).toBool());

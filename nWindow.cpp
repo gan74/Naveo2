@@ -73,8 +73,12 @@ nWindow::nWindow(QWidget *parent) : QWidget(parent) {
 	forwardAction = new QAction(nApp()->getTheme()->getIcon(nTheme::Forward), tr("Forward"), this);
 	reloadAction = new QAction(nApp()->getTheme()->getIcon(nTheme::Reload), tr("Reload"), this);
 	stopAction = new QAction(nApp()->getTheme()->getIcon(nTheme::Stop), tr("Stop"), this);
+    QAction *newTab = new QAction(nApp()->getTheme()->getIcon(nTheme::NewTab), tr("New tab"), this);
+    newTab->setShortcut(QKeySequence("Ctrl+T"));
+    connect(newTab, SIGNAL(triggered()), this, SLOT(addTab()));
 
 	mainMenu = new QMenu(this);
+    mainMenu->addAction(newTab);
 	mainMenu->addAction(backAction);
 	mainMenu->addAction(forwardAction);
 	mainMenu->addAction(reloadAction);

@@ -29,8 +29,8 @@ nWebView::nWebView(QWidget *parent) : QWebView(parent) {
 	connect(this, SIGNAL(loadProgress(int)), this, SLOT(updateProgress(int)));
 	connect(page(), SIGNAL(unsupportedContent(QNetworkReply*)), this, SLOT(unsupportedContent(QNetworkReply*)));
 	connect(this, SIGNAL(loadFinished(bool)), this, SLOT(finished(bool)));
-
-	load(QUrl("http://www.google.com/"));
+    nSettingsManager settings(this);
+    load(QUrl(settings.getSettings(nSettingsManager::homePage).toString()));
 }
 
 int nWebView::getProgress() const {
